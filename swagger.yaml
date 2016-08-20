@@ -1,0 +1,50 @@
+# Example YAML to get you started quickly.
+# Be aware that YAML has indentation based scoping.
+# Code completion support is available so start typing for available options.
+swagger: '2.0'
+
+# This is your document metadata
+info:
+  version: "0.0.1"
+  title: Smash API
+  description: API for http://smash.cologne
+
+# Describe your paths here
+paths:
+  # This is a path endpoint. Change it.
+  /players:
+    # This is a HTTP operation
+    get:
+      # Describe this verb here. Note: you can use markdown
+      description: |
+        Gets `Player` objects.
+        Optional query param of **size** determines
+        size of returned array
+      # This is array of GET operation parameters:
+      parameters:
+        # An example parameter that is in query and is required
+        -
+          name: size
+          in: query
+          description: Size of array
+          type: number
+          format: double
+      # Expected responses for this operation:
+      responses:
+        # Response code
+        200:
+          description: Successful response
+          # A schema describing your response object.
+          # Use JSON Schema format
+          schema:
+            title: ArrayOfPlayers
+            type: array
+            items:
+              title: Player
+              type: object
+              properties:
+                id:
+                  type: number
+                name:
+                  type: string
+                
