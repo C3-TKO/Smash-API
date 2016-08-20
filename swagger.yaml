@@ -40,11 +40,14 @@ paths:
             title: ArrayOfPlayers
             type: array
             items:
-              title: Player
-              type: object
-              properties:
-                id:
-                  type: number
-                name:
-                  type: string
-                
+              $ref: '#/definitions/Player'
+definitions:
+  Player:
+    type: object
+    properties:
+      id:
+        type: number
+        description: Unique identifier representing a specific player.
+      name:
+        type: string
+        description: Name of a player.
