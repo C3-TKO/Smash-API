@@ -26,6 +26,23 @@ paths:
             type: array
             items:
               $ref: '#/definitions/Player'
+    post:
+      description: |
+        Creates a new `Player` model
+      parameters:
+        - name: player
+          in: body
+          description: The update player model
+          schema:
+            $ref: '#/definitions/Player'
+          required: true
+      responses:
+        201:
+          description: Succesfully created
+          headers:
+            Location:
+              description: Shows the url of the created player
+              type: string
 
   /players/{id}:
     get:
@@ -44,7 +61,7 @@ paths:
             $ref: '#/definitions/Player'
     put:
       description: |
-        Updates a specific player identified by its id
+        Updates a specific `Player` model identified by its id
       parameters:
         - name: id
           in: path
@@ -53,14 +70,25 @@ paths:
           required: true
         - name: player
           in: body
-          description: The update player model
+          description: The player model to be updated
           schema:
             $ref: '#/definitions/Player'
           required: true
       responses:
         200:
           description: Succesful response
-
+    delete:
+      description: |
+        Deletes a `Player` model
+      parameters:
+        - name: id
+          in: path
+          type: string
+          description: ID of the player
+          required: true
+      responses:
+        200:
+          description: OK
 
 definitions:
   Player:
