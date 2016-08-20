@@ -5,6 +5,15 @@ info:
   title: Smash API
   description: API for http://smash.cologne
 
+host: smash.cologne
+basePath: /api
+schemes:
+  - http
+consumes:
+  - application/json
+produces:
+  - application/json
+
 paths:
   /players:
     get:
