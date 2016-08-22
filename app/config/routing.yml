@@ -1,3 +1,5 @@
-app:
-    resource: "@AppBundle/Controller/"
+spec:
+    resource: "@AppBundle/Controller/Spec"
     type:     annotation
+api:
+    resource: "@AppBundle/Controller/Api"
