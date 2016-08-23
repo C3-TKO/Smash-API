@@ -7,6 +7,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Entity\Player;
 
 class PlayerController extends Controller
 {
@@ -16,7 +17,15 @@ class PlayerController extends Controller
      */
     public function createAction(Request $request)
     {
-        return new Response('Will create a player entity');
+        $playerFromRequest = json_decode($request->getContent(), true);
+        $player = new Player();
+        $player->setName($playerFromRequest['name']);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($player);
+        $em->flush();
+
+        return new Response('Saved player with name: ' . $playerFromRequest['name']);
     }
 
     /**
