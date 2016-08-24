@@ -52,4 +52,3 @@ class Player
         return $this->id;
     }
 }
-

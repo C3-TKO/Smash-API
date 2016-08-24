@@ -4,7 +4,7 @@
     <indexes>
       <index name="name" columns="name"/>
     </indexes>
-    <id name="id" type="boolean" column="id">
+    <id name="id" type="integer" column="id">
       <generator strategy="IDENTITY"/>
     </id>
     <field name="name" type="string" column="name" length="30" nullable="false">

@@ -48,9 +48,15 @@ class PlayerController extends Controller
      * @Route("/players/{id}", name="list_player")
      * @Method("GET")
      */
-    public function getPlayerById(Request $request)
+    public function getPlayer($id)
     {
-        return new Response('Will list a player');
+        $player = $this->getDoctrine()
+            ->getRepository('AppBundle:Player')
+            ->findOneById($id);
+
+        var_dump($player);
+
+        return new Response(json_encode($player));
     }
 
     /**
