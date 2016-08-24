@@ -54,6 +54,13 @@ class PlayerController extends Controller
             ->getRepository('AppBundle:Player')
             ->findOneById($id);
 
+        if (!$player) {
+            throw $this->createNotFoundException(sprintf(
+                'No player found with id "%s"',
+                $id
+            ));
+        }
+
         $data = array(
             'id' => $player->getId(),
             'name' => $player->getName()
