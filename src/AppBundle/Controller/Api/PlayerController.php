@@ -13,7 +13,7 @@ use AppBundle\Form\PlayerType;
 class PlayerController extends Controller
 {
     /**
-     * @Route("/players", name="create_player")
+     * @Route("/players", name="post_player")
      * @Method("POST")
      */
     public function createAction(Request $request)
@@ -28,15 +28,20 @@ class PlayerController extends Controller
         $em->persist($player);
         $em->flush();
 
+        $playerUrl = $this->generateUrl(
+            'get_player',
+            ['id' => $player->getId()]
+        );
+
         // Response handling
         $response = new Response();
         $response->setStatusCode(Response::HTTP_CREATED);
-        $response->headers->set('Location', '/players/' . $player->getId());
+        $response->headers->set('Location', $playerUrl);
         return $response;
     }
 
     /**
-     * @Route("/players", name="list_players")
+     * @Route("/players", name="get_players")
      * @Method("GET")
      */
     public function getPlayers(Request $request)
@@ -45,7 +50,7 @@ class PlayerController extends Controller
     }
 
     /**
-     * @Route("/players/{id}", name="list_player")
+     * @Route("/players/{id}", name="get_player")
      * @Method("GET")
      */
     public function getPlayer($id)
@@ -73,7 +78,7 @@ class PlayerController extends Controller
     }
 
     /**
-     * @Route("/players/{id}", name="update_player")
+     * @Route("/players/{id}", name="put_player")
      * @Method("PUT")
      */
     public function updatePlayerById(Request $request)
