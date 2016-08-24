@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Player;
+use AppBundle\Form\PlayerType;
 
 class PlayerController extends Controller
 {
@@ -17,15 +18,21 @@ class PlayerController extends Controller
      */
     public function createAction(Request $request)
     {
-        $playerFromRequest = json_decode($request->getContent(), true);
+        // Input validation and handling
         $player = new Player();
-        $player->setName($playerFromRequest['name']);
+        $form = $this->createForm('AppBundle\Form\PlayerType', $player);
+        $form->submit(json_decode($request->getContent(), true));
 
+        // New entity persistence
         $em = $this->getDoctrine()->getManager();
         $em->persist($player);
         $em->flush();
 
-        return new Response('Saved player with name: ' . $playerFromRequest['name']);
+        // Response handling
+        $response = new Response();
+        $response->setStatusCode(Response::HTTP_CREATED);
+        $response->headers->set('Location', '/players/' . $player->getId());
+        return $response;
     }
 
     /**
