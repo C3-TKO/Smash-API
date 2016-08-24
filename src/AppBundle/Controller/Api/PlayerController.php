@@ -54,9 +54,11 @@ class PlayerController extends Controller
             ->getRepository('AppBundle:Player')
             ->findOneById($id);
 
-        var_dump($player);
-
-        return new Response(json_encode($player));
+        $data = array(
+            'id' => $player->getId(),
+            'name' => $player->getName()
+        );
+        return new Response(json_encode($data), Response::HTTP_OK);
     }
 
     /**
