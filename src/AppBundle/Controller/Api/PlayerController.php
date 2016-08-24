@@ -58,7 +58,11 @@ class PlayerController extends Controller
             'id' => $player->getId(),
             'name' => $player->getName()
         );
-        return new Response(json_encode($data), Response::HTTP_OK);
+
+        $response = new Response(json_encode($data), Response::HTTP_OK);
+        $response->headers->set('Content-Type', 'application/json');
+
+        return $response;
     }
 
     /**
