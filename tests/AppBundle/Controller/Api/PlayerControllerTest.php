@@ -19,8 +19,7 @@ class PlayerControllerTest extends \PHPUnit_Framework_TestCase
         $data = array(
             'name' => 'ACME'
         );
-
-        // 1) Create a programmer resource
+        
         $response = $client->post('/players', [
             'body' => json_encode($data)
         ]);
