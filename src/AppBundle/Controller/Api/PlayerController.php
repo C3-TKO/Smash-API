@@ -5,6 +5,7 @@ namespace AppBundle\Controller\Api;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Player;
@@ -34,9 +35,10 @@ class PlayerController extends Controller
         );
 
         // Response handling
-        $response = new Response();
-        $response->setStatusCode(Response::HTTP_CREATED);
+        $data = $this->serializePlayer($player);
+        $response = new JsonResponse($data, Response::HTTP_CREATED);
         $response->headers->set('Location', $playerUrl);
+
         return $response;
     }
 
@@ -46,7 +48,17 @@ class PlayerController extends Controller
      */
     public function getPlayers(Request $request)
     {
-        return new Response('Will list all players');
+        $players = $this->getDoctrine()
+            ->getRepository('AppBundle:Player')
+            ->findAll();
+
+        $data = array('players' => array());
+        foreach ($players as $player) {
+            $data['players'][] = $this->serializePlayer($player);
+        }
+
+        $response = new JsonResponse($data, Response::HTTP_OK);
+        return $response;
     }
 
     /**
@@ -66,14 +78,9 @@ class PlayerController extends Controller
             ));
         }
 
-        $data = array(
-            'id' => $player->getId(),
-            'name' => $player->getName()
-        );
+        $data = $this->serializePlayer($player);
 
-        $response = new Response(json_encode($data), Response::HTTP_OK);
-        $response->headers->set('Content-Type', 'application/json');
-
+        $response = new JsonResponse($data, Response::HTTP_OK);
         return $response;
     }
 
@@ -93,5 +100,13 @@ class PlayerController extends Controller
     public function deletePlayerById(Request $request)
     {
         return new Response('Will delete a player');
+    }
+
+    private function serializePlayer(Player $player)
+    {
+        return array(
+            'id' => $player->getId(),
+            'name' => $player->getName()
+        );
     }
 }
