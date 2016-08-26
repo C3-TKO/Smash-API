@@ -2,25 +2,18 @@
 
 namespace AppBundle\Tests\ControllerAPI;
 
-
 use Symfony\Component\HttpFoundation\Response;
+use AppBundle\Test\ApiTestCase;
 
-class PlayerControllerTest extends \PHPUnit_Framework_TestCase
+class PlayerControllerTest extends ApiTestCase
 {
     public function testPOST()
     {
-        $client = new \GuzzleHttp\Client([
-            'base_url' => 'http://localhost:8000',
-            'defaults' => [
-                'exceptions' => false
-            ]
-        ]);
-
         $data = array(
             'name' => 'ACME'
         );
-        
-        $response = $client->post('/players', [
+
+        $response = $this->client->post('/players', [
             'body' => json_encode($data)
         ]);
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
