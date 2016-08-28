@@ -22,7 +22,7 @@ class PlayerController extends Controller
         // Input validation and handling
         $player = new Player();
         $form = $this->createForm('AppBundle\Form\PlayerType', $player);
-        $form->submit(json_decode($request->getContent(), true));
+        $this->processForm($request, $form);
 
         // New entity persistence
         $em = $this->getDoctrine()->getManager();
@@ -101,9 +101,9 @@ class PlayerController extends Controller
             ));
         }
 
-        $data = json_decode($request->getContent(), true);
         $form = $this->createForm('AppBundle\Form\PlayerType', $player);
-        $form->submit($data);
+        $this->processForm($request, $form);
+
         $em = $this->getDoctrine()->getManager();
         $em->persist($player);
         $em->flush();
@@ -127,5 +127,15 @@ class PlayerController extends Controller
             'id' => $player->getId(),
             'name' => $player->getName()
         );
+    }
+
+    /**
+     * @param Request $request
+     * @param \Symfony\Component\Form\Form $form
+     */
+    private function processForm(Request $request, \Symfony\Component\Form\Form $form)
+    {
+        $data = json_decode($request->getContent(), true);
+        $form->submit($data);
     }
 }
