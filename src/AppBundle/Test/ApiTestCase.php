@@ -12,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DomCrawler\Crawler;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ApiTestCase extends KernelTestCase
 {
@@ -232,20 +231,17 @@ class ApiTestCase extends KernelTestCase
     }
 
     /**
-     * @param array $data
-     * @return Player
+     * @param array $names
      */
-    protected function createPlayer(array $data)
+    protected function createPlayers(array $names)
     {
-        $accessor = PropertyAccess::createPropertyAccessor();
-        $player = new Player();
-        foreach ($data as $key => $value) {
-            $accessor->setValue($player, $key, $value);
-        }
+        foreach($names as $name) {
+            $player = new Player();
+            $player->setName($name);
 
-        $this->getEntityManager()->persist($player);
-        $this->getEntityManager()->flush();
-        return $player;
+            $this->getEntityManager()->persist($player);
+            $this->getEntityManager()->flush();
+        }
     }
 
 }

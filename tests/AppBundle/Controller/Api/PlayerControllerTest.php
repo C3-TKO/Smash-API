@@ -34,20 +34,30 @@ class PlayerControllerTest extends ApiTestCase
      */
     public function getPlayerShouldRetrieveASinglePlayer()
     {
-        $this->createPlayer(['name' => 'ACME']);
+        $this->createPlayers(['ACME']);
 
         $response = $this->client->get('/players/1');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'id',
+            'name'
+        ));
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'name', 'ACME');
     }
 
     /**
-     * @test123
+     * @test
      */
     public function getPlayersShouldRetrieveACollectionOfAllPlayers()
     {
+        $this->createPlayers(['ACME', 'INC.']);
+
         $response = $this->client->get('/players');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertyIsArray($response, 'players');
+        $this->asserter()->assertResponsePropertyCount($response, 'players', 2);
     }
 }
