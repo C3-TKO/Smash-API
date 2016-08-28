@@ -18,11 +18,11 @@ class PlayerControllerTest extends ApiTestCase
         ]);
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertEquals($response->getHeader('Location'), '/players/1');
-
-        $finishedData = json_decode($response->getBody(true), true);
-        $this->assertArrayHasKey('name', $finishedData);
-        $this->assertEquals('ACME', $finishedData['name']);
-        $this->assertArrayHasKey('id', $finishedData);
-        $this->assertEquals(1, $finishedData['id']);
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'id',
+            'name'
+        ));
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'name', 'ACME');
     }
 }

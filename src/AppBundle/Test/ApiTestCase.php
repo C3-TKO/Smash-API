@@ -3,7 +3,6 @@
 namespace AppBundle\Test;
 
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Message\AbstractMessage;
 use GuzzleHttp\Message\ResponseInterface;
@@ -31,6 +30,11 @@ class ApiTestCase extends KernelTestCase
      * @var ConsoleOutput
      */
     protected $output;
+
+    /**
+     * @var ResponseAsserter
+     */
+    private $responseAsserter;
 
     /**
      * @var FormatterHelper
@@ -189,6 +193,17 @@ class ApiTestCase extends KernelTestCase
             $this->output = new ConsoleOutput();
         }
         $this->output->writeln($string);
+    }
+
+    /**
+     * @return ResponseAsserter
+     */
+    protected function asserter()
+    {
+        if ($this->responseAsserter === null) {
+            $this->responseAsserter = new ResponseAsserter();
+        }
+        return $this->responseAsserter;
     }
 
     /**
