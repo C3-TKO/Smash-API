@@ -45,7 +45,7 @@ class ApiTestCase extends KernelTestCase
     public static function setUpBeforeClass()
     {
         self::$staticClient = new Client([
-            'base_url' => 'http://localhost:8000',
+            'base_url' => getenv('TEST_BASE_URL'),
             'defaults' => [
                 'exceptions' => false
             ]
