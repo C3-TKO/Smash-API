@@ -8,6 +8,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Message\AbstractMessage;
 use GuzzleHttp\Message\ResponseInterface;
 use GuzzleHttp\Subscriber\History;
+use GuzzleHttp\Event\BeforeEvent;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -50,6 +51,15 @@ class ApiTestCase extends KernelTestCase
                 'exceptions' => false
             ]
         ]);
+
+        // guaranteeing that /app_test.php is prefixed to all URLs
+        self::$staticClient->getEmitter()
+            ->on('before', function(BeforeEvent $event) {
+                $path = $event->getRequest()->getPath();
+                $event->getRequest()->setPath('/app_test.php'.$path);
+            }
+        );
+
         self::$history = new History();
         self::$staticClient->getEmitter()
             ->attach(self::$history);

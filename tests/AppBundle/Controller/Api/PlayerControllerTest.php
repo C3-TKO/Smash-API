@@ -20,7 +20,7 @@ class PlayerControllerTest extends ApiTestCase
             'body' => json_encode($data)
         ]);
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-        $this->assertEquals($response->getHeader('Location'), '/players/1');
+        $this->assertStringEndsWith('/players/1', $response->getHeader('Location'));
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'
