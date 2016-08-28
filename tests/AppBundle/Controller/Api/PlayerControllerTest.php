@@ -60,4 +60,29 @@ class PlayerControllerTest extends ApiTestCase
         $this->asserter()->assertResponsePropertyIsArray($response, 'players');
         $this->asserter()->assertResponsePropertyCount($response, 'players', 2);
     }
+
+    /**
+     * @test
+     */
+    public function putPlayerShouldUpdatePlayer()
+    {
+        $this->createPlayers(['AMCE']);
+
+        $data = array(
+            'id' => 1,
+            'name' => 'INC.'
+        );
+
+        $response = $this->client->put('/players/1', [
+            'body' => json_encode($data)
+        ]);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'id',
+            'name'
+        ));
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'name', 'INC.');
+    }
 }

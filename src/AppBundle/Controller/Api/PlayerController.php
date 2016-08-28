@@ -88,9 +88,28 @@ class PlayerController extends Controller
      * @Route("/players/{id}", name="put_player")
      * @Method("PUT")
      */
-    public function updatePlayerById(Request $request)
+    public function updatePlayerById($id, Request $request)
     {
-        return new Response('Will update a player');
+        $player = $this->getDoctrine()
+            ->getRepository('AppBundle:Player')
+            ->findOneById($id);
+
+        if (!$player) {
+            throw $this->createNotFoundException(sprintf(
+                'No player found with id "%s"',
+                $id
+            ));
+        }
+
+        $data = json_decode($request->getContent(), true);
+        $form = $this->createForm('AppBundle\Form\PlayerType', $player);
+        $form->submit($data);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($player);
+        $em->flush();
+        $data = $this->serializePlayer($player);
+        $response = new JsonResponse($data, Response::HTTP_OK);
+        return $response;
     }
 
     /**
