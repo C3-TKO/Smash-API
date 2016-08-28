@@ -7,7 +7,10 @@ use AppBundle\Test\ApiTestCase;
 
 class PlayerControllerTest extends ApiTestCase
 {
-    public function testPOST()
+    /**
+     * @test
+     */
+    public function postAValidPlayerShouldCreateANewPlayerEntity()
     {
         $data = array(
             'name' => 'ACME'
@@ -24,5 +27,27 @@ class PlayerControllerTest extends ApiTestCase
         ));
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'name', 'ACME');
+    }
+
+    /**
+     * @test
+     */
+    public function getPlayerShouldRetrieveASinglePlayer()
+    {
+        $this->createPlayer(['name' => 'ACME']);
+
+        $response = $this->client->get('/players/1');
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+    }
+
+    /**
+     * @test123
+     */
+    public function getPlayersShouldRetrieveACollectionOfAllPlayers()
+    {
+        $response = $this->client->get('/players');
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
     }
 }

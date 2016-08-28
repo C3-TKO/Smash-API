@@ -2,6 +2,7 @@
 
 namespace AppBundle\Test;
 
+use AppBundle\Entity\Player;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use GuzzleHttp\Client;
 use GuzzleHttp\Message\AbstractMessage;
@@ -11,6 +12,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ApiTestCase extends KernelTestCase
 {
@@ -220,4 +222,30 @@ class ApiTestCase extends KernelTestCase
 
         $this->printDebug($output);
     }
+
+    /**
+     * @return EntityManager
+     */
+    protected function getEntityManager()
+    {
+        return $this->getService('doctrine.orm.entity_manager');
+    }
+
+    /**
+     * @param array $data
+     * @return Player
+     */
+    protected function createPlayer(array $data)
+    {
+        $accessor = PropertyAccess::createPropertyAccessor();
+        $player = new Player();
+        foreach ($data as $key => $value) {
+            $accessor->setValue($player, $key, $value);
+        }
+
+        $this->getEntityManager()->persist($player);
+        $this->getEntityManager()->flush();
+        return $player;
+    }
+
 }
