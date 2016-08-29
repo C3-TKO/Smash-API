@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Entity\Player;
-use AppBundle\Form\PlayerType;
 
 class PlayerController extends Controller
 {
@@ -101,7 +100,7 @@ class PlayerController extends Controller
             ));
         }
 
-        $form = $this->createForm('AppBundle\Form\PlayerType', $player);
+        $form = $this->createForm('AppBundle\Form\UpdatePlayerType', $player);
         $this->processForm($request, $form);
 
         $em = $this->getDoctrine()->getManager();
