@@ -46,7 +46,7 @@ class PlayerController extends Controller
      * @Route("/players", name="get_players")
      * @Method("GET")
      */
-    public function getPlayers()
+    public function getCollectionAction()
     {
         $players = $this->getDoctrine()
             ->getRepository('AppBundle:Player')
@@ -65,7 +65,7 @@ class PlayerController extends Controller
      * @Route("/players/{id}", name="get_player")
      * @Method("GET")
      */
-    public function getPlayer($id)
+    public function getAction($id)
     {
         $player = $this->getDoctrine()
             ->getRepository('AppBundle:Player')
@@ -88,7 +88,7 @@ class PlayerController extends Controller
      * @Route("/players/{id}", name="put_player")
      * @Method({"PUT", "PATCH"})
      */
-    public function updatePlayerById($id, Request $request)
+    public function updateAction($id, Request $request)
     {
         $player = $this->getDoctrine()
             ->getRepository('AppBundle:Player')
@@ -116,7 +116,7 @@ class PlayerController extends Controller
      * @Route("/players/{id}", name="delete_player")
      * @Method("DELETE")
      */
-    public function deletePlayerById($id)
+    public function deleteAction($id)
     {
         $player = $this->getDoctrine()
             ->getRepository('AppBundle:Player')
@@ -133,7 +133,7 @@ class PlayerController extends Controller
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
-    private function serializePlayer(Player $player)
+    private function serialize(Player $player)
     {
         return array(
             'id' => $player->getId(),
