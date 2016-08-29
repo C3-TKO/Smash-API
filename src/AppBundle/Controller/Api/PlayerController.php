@@ -127,7 +127,7 @@ class PlayerController extends Controller
             $em->flush();
         }
 
-        // Will always return a 204 as it doesn't matter if the player existed or not. What matters is idempotancy.
+        // Will always return a HTTP 204 as it doesn't matter if the player existed or not. What matters is idempotancy!
         // Requesting an idempotant endpoint prescribes that the repsonse must always be the same
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
