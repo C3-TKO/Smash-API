@@ -115,9 +115,21 @@ class PlayerController extends Controller
      * @Route("/players/{id}", name="delete_player")
      * @Method("DELETE")
      */
-    public function deletePlayerById(Request $request)
+    public function deletePlayerById($id)
     {
-        return new Response('Will delete a player');
+        $player = $this->getDoctrine()
+            ->getRepository('AppBundle:Player')
+            ->findOneById($id);
+
+        if ($player) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($player);
+            $em->flush();
+        }
+
+        // Will always return a 204 as it doesn't matter if the player existed or not. What matters is idempotancy.
+        // Requesting an idempotant endpoint prescribes that the repsonse must always be the same
+        return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
     private function serializePlayer(Player $player)

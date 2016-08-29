@@ -85,4 +85,16 @@ class PlayerControllerTest extends ApiTestCase
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'name', 'INC.');
     }
+
+    /**
+     * @test
+     */
+    public function deletePlayerShouldDeleteAPlayer()
+    {
+        $this->createPlayers(['ACME']);
+
+        $response = $this->client->delete('/players/1');
+
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+    }
 }
