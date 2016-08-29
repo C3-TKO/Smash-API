@@ -27,6 +27,11 @@ class PlayerControllerTest extends ApiTestCase
         ));
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'name', 'ACME');
+
+        // Only one player should be in database
+        $em = $this->getEntityManager();
+        $players = $em->getRepository('AppBundle:Player')->findAll();
+        $this->assertEquals(1, count($players));
     }
 
     /**
@@ -96,5 +101,10 @@ class PlayerControllerTest extends ApiTestCase
         $response = $this->client->delete('/players/1');
 
         $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+
+        // No more players should be in database
+        $em = $this->getEntityManager();
+        $players = $em->getRepository('AppBundle:Player')->findAll();
+        $this->assertEquals(0, count($players));
     }
 }
