@@ -66,7 +66,7 @@ class PlayerControllerTest extends ApiTestCase
      */
     public function putPlayerShouldUpdatePlayer()
     {
-        $this->createPlayers(['AMCE']);
+        $this->createPlayers(['ACME']);
 
         $data = array(
             'id' => 1,
