@@ -45,7 +45,7 @@ class PlayerController extends Controller
      * @Route("/players", name="get_players")
      * @Method("GET")
      */
-    public function getPlayers(Request $request)
+    public function getPlayers()
     {
         $players = $this->getDoctrine()
             ->getRepository('AppBundle:Player')
