@@ -8,6 +8,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Form\Form;
 use AppBundle\Entity\Player;
 
 class PlayerController extends Controller
@@ -85,7 +86,7 @@ class PlayerController extends Controller
 
     /**
      * @Route("/players/{id}", name="put_player")
-     * @Method("PUT")
+     * @Method({"PUT", "PATCH"})
      */
     public function updatePlayerById($id, Request $request)
     {
@@ -142,11 +143,13 @@ class PlayerController extends Controller
 
     /**
      * @param Request $request
-     * @param \Symfony\Component\Form\Form $form
+     * @param Form $form
      */
-    private function processForm(Request $request, \Symfony\Component\Form\Form $form)
+    private function processForm(Request $request, Form $form)
     {
         $data = json_decode($request->getContent(), true);
-        $form->submit($data);
+
+        $clearMissing = $request->getMethod() !== 'PATCH';
+        $form->submit($data, $clearMissing);
     }
 }

@@ -107,4 +107,28 @@ class PlayerControllerTest extends ApiTestCase
         $players = $em->getRepository('AppBundle:Player')->findAll();
         $this->assertEquals(0, count($players));
     }
+
+    /**
+     * @test
+     */
+    public function patchPlayerShouldUpdateAPlayer()
+    {
+        $this->createPlayers(['ACME']);
+
+        $data = array(
+            'name' => 'INC.'
+        );
+
+        $response = $this->client->patch('/players/1', [
+            'body' => json_encode($data)
+        ]);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'id',
+            'name'
+        ));
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'name', 'INC.');
+    }
 }
