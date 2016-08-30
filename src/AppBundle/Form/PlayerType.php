@@ -22,7 +22,11 @@ class PlayerType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'AppBundle\Entity\Player',
-            'is_edit' => false
+            'is_edit' => false,
+            // Setting the csrf protection globally to false as this api will not store the user within session cookies
+            // Keep in mind that the protection should be turned on again if his form type will be used within an ui
+            // form as well!
+            'csrf_protection' => false
         ]);
     }
 
