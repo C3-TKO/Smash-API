@@ -9,6 +9,20 @@ use Symfony\Component\Form\Form;
 class BaseController extends Controller
 {
     /**
+     * @param Form $form
+     * @return Response
+     */
+    public function createValidationErrorResponse(Form $form) {
+        $data = [
+            'type' => 'validation_error',
+            'title' => 'There was a validation error',
+            'errors' => $this->getErrorsFromForm($form)
+        ];
+
+        return $this->createApiResponse($data, Response::HTTP_BAD_REQUEST);
+    }
+
+    /**
      * Retrieves the errors for all form fields recursively
      *
      * @param Form $form
