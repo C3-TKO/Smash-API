@@ -23,6 +23,16 @@ class PlayerController extends BaseController
         $form = $this->createForm('AppBundle\Form\PlayerType', $player);
         $this->processForm($request, $form);
 
+        if (!$form->isValid()) {
+            $data = [
+                'type' => 'validation_error',
+                'title' => 'There was a validation error',
+                'errors' => $this->getErrorsFromForm($form)
+            ];
+
+            return $this->createApiResponse($data, Response::HTTP_BAD_REQUEST);
+        }
+
         // New entity persistence
         $em = $this->getDoctrine()->getManager();
         $em->persist($player);

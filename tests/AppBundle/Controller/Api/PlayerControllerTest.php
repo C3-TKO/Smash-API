@@ -38,6 +38,28 @@ class PlayerControllerTest extends ApiTestCase
     /**
      * @test
      */
+    public function postAnInvalidPlayerShouldCreateANewPlayerEntity()
+    {
+        // Invalid because the mandatory attribute 'name' is not set
+        $data = array();
+
+        $response = $this->client->post('/players', [
+            'body' => json_encode($data)
+        ]);
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        //$this->assertEquals('application/json', $response->getHeader('Content-Type'));
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'type',
+            'title',
+            'errors'
+        ));
+        $this->asserter()->assertResponsePropertyExists($response, 'errors.name');
+        $this->asserter()->assertResponsePropertyEquals($response, 'errors.name[0]', 'A player must have a name - except for Jaqen H\'ghar - who is actually No one');
+    }
+
+    /**
+     * @test
+     */
     public function getPlayerShouldRetrieveASinglePlayer()
     {
         $this->createPlayers(['ACME']);

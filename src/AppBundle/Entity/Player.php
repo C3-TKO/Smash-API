@@ -2,6 +2,8 @@
 
 namespace AppBundle\Entity;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * Player
  */
@@ -9,8 +11,9 @@ class Player
 {
     /**
      * @var string
+     * @Assert\NotBlank(message="A player must have a name - except for Jaqen H'ghar - who is actually No one")
      */
-    private $name = '';
+    private $name;
 
     /**
      * @var boolean
