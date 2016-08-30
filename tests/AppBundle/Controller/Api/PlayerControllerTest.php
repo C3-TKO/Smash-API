@@ -120,6 +120,38 @@ class PlayerControllerTest extends ApiTestCase
         ));
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'name', 'INC.');
+
+        // Only one player should be in database
+        $em = $this->getEntityManager();
+        $players = $em->getRepository('AppBundle:Player')->findAll();
+        $this->assertEquals(1, count($players));
+    }
+
+    /**
+     * @test
+     */
+    public function putAnInvalidPlayerShouldNotUpdateAPlayerEntity()
+    {
+        $this->createPlayers(['ACME']);
+
+        $data = array(
+            'id' => 1,
+            'name' => null
+        );
+
+        $response = $this->client->put('/players/1', [
+            'body' => json_encode($data)
+        ]);
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        //$this->assertEquals('application/json', $response->getHeader('Content-Type'));
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'type',
+            'title',
+            'errors'
+        ));
+        $this->asserter()->assertResponsePropertyExists($response, 'errors.name');
+        $this->asserter()->assertResponsePropertyEquals($response, 'errors.name[0]', 'A player must have a name - except for Jaqen H\'ghar - who is actually No one');
     }
 
     /**
