@@ -35,8 +35,8 @@ class PlayerController extends Controller
         );
 
         // Response handling
-        $data = $this->serializePlayer($player);
-        $response = new JsonResponse($data, Response::HTTP_CREATED);
+        $json = $this->serialize($player);
+        $response = new Response($json, Response::HTTP_CREATED);
         $response->headers->set('Location', $playerUrl);
 
         return $response;
@@ -52,12 +52,9 @@ class PlayerController extends Controller
             ->getRepository('AppBundle:Player')
             ->findAll();
 
-        $data = array('players' => array());
-        foreach ($players as $player) {
-            $data['players'][] = $this->serializePlayer($player);
-        }
+        $json = $this->serialize(['players' => $players]);
+        $response = new Response($json, Response::HTTP_OK);
 
-        $response = new JsonResponse($data, Response::HTTP_OK);
         return $response;
     }
 
@@ -78,9 +75,9 @@ class PlayerController extends Controller
             ));
         }
 
-        $data = $this->serializePlayer($player);
+        $json = $this->serialize($player);
 
-        $response = new JsonResponse($data, Response::HTTP_OK);
+        $response = new Response($json, Response::HTTP_OK);
         return $response;
     }
 
@@ -107,8 +104,8 @@ class PlayerController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($player);
         $em->flush();
-        $data = $this->serializePlayer($player);
-        $response = new JsonResponse($data, Response::HTTP_OK);
+        $json = $this->serialize($player);
+        $response = new Response($json, Response::HTTP_OK);
         return $response;
     }
 
@@ -133,12 +130,10 @@ class PlayerController extends Controller
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
 
-    private function serialize(Player $player)
+    private function serialize($data)
     {
-        return array(
-            'id' => $player->getId(),
-            'name' => $player->getName()
-        );
+        return $this->container->get('jms_serializer')
+            ->serialize($data, 'json');
     }
 
     /**
