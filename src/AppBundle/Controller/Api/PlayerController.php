@@ -4,14 +4,13 @@ namespace AppBundle\Controller\Api;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use AppBundle\Entity\Player;
 
-class PlayerController extends Controller
+class PlayerController extends BaseController
 {
     /**
      * @Route("/players", name="post_player")
@@ -35,8 +34,7 @@ class PlayerController extends Controller
         );
 
         // Response handling
-        $json = $this->serialize($player);
-        $response = new Response($json, Response::HTTP_CREATED);
+        $response = $this->createApiResponse($player, Response::HTTP_CREATED);
         $response->headers->set('Location', $playerUrl);
 
         return $response;
@@ -52,10 +50,7 @@ class PlayerController extends Controller
             ->getRepository('AppBundle:Player')
             ->findAll();
 
-        $json = $this->serialize(['players' => $players]);
-        $response = new Response($json, Response::HTTP_OK);
-
-        return $response;
+        return $this->createApiResponse(['players' => $players]);
     }
 
     /**
@@ -75,10 +70,7 @@ class PlayerController extends Controller
             ));
         }
 
-        $json = $this->serialize($player);
-
-        $response = new Response($json, Response::HTTP_OK);
-        return $response;
+        return $this->createApiResponse($player);
     }
 
     /**
@@ -104,9 +96,8 @@ class PlayerController extends Controller
         $em = $this->getDoctrine()->getManager();
         $em->persist($player);
         $em->flush();
-        $json = $this->serialize($player);
-        $response = new Response($json, Response::HTTP_OK);
-        return $response;
+
+        return $this->createApiResponse($player);
     }
 
     /**
@@ -128,12 +119,6 @@ class PlayerController extends Controller
         // Will always return a HTTP 204 as it doesn't matter if the player existed or not. What matters is idempotancy!
         // Requesting an idempotant endpoint prescribes that the repsonse must always be the same
         return new Response(null, Response::HTTP_NO_CONTENT);
-    }
-
-    private function serialize($data)
-    {
-        return $this->container->get('jms_serializer')
-            ->serialize($data, 'json');
     }
 
     /**

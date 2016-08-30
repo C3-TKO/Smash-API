@@ -20,6 +20,7 @@ class PlayerControllerTest extends ApiTestCase
             'body' => json_encode($data)
         ]);
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
         $this->assertStringEndsWith('/players/1', $response->getHeader('Location'));
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
@@ -44,6 +45,7 @@ class PlayerControllerTest extends ApiTestCase
         $response = $this->client->get('/players/1');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'
@@ -62,6 +64,7 @@ class PlayerControllerTest extends ApiTestCase
         $response = $this->client->get('/players');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
         $this->asserter()->assertResponsePropertyIsArray($response, 'players');
         $this->asserter()->assertResponsePropertyCount($response, 'players', 2);
     }
@@ -83,6 +86,7 @@ class PlayerControllerTest extends ApiTestCase
         ]);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'
@@ -124,6 +128,7 @@ class PlayerControllerTest extends ApiTestCase
         ]);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'
