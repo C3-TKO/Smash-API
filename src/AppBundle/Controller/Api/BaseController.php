@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller\Api;
 
+use AppBundle\Api\ApiProblem;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
@@ -13,13 +14,15 @@ class BaseController extends Controller
      * @return Response
      */
     public function createValidationErrorResponse(Form $form) {
-        $data = [
-            'type' => 'validation_error',
-            'title' => 'There was a validation error',
-            'errors' => $this->getErrorsFromForm($form)
-        ];
+        $apiProblem = new ApiProblem(
+            Response::HTTP_BAD_REQUEST,
+            'validation_error',
+            'There was a validation error'
+        );
 
-        $response = new Response($this->serialize($data), Response::HTTP_BAD_REQUEST);
+        $apiProblem->set('errors', $this->getErrorsFromForm($form));
+
+        $response = new Response($this->serialize($apiProblem->toArray()), Response::HTTP_BAD_REQUEST);
         $response->headers->set('Content-Type', 'application/json+problem');
 
         return $response;
