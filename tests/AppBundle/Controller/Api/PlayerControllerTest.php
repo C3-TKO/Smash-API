@@ -55,6 +55,7 @@ class PlayerControllerTest extends ApiTestCase
         ));
         $this->asserter()->assertResponsePropertyExists($response, 'errors.name');
         $this->asserter()->assertResponsePropertyEquals($response, 'errors.name[0]', 'A player must have a name - except for Jaqen H\'ghar - who is actually No one');
+        $this->assertEquals('application/json+problem', $response->getHeader('Content-Type'));
 
         // Only one player should be in database
         $em = $this->getEntityManager();
@@ -152,6 +153,7 @@ class PlayerControllerTest extends ApiTestCase
         ));
         $this->asserter()->assertResponsePropertyExists($response, 'errors.name');
         $this->asserter()->assertResponsePropertyEquals($response, 'errors.name[0]', 'A player must have a name - except for Jaqen H\'ghar - who is actually No one');
+        $this->assertEquals('application/json+problem', $response->getHeader('Content-Type'));
     }
 
     /**

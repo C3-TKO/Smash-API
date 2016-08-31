@@ -19,7 +19,10 @@ class BaseController extends Controller
             'errors' => $this->getErrorsFromForm($form)
         ];
 
-        return $this->createApiResponse($data, Response::HTTP_BAD_REQUEST);
+        $response = new Response($this->serialize($data), Response::HTTP_BAD_REQUEST);
+        $response->headers->set('Content-Type', 'application/json+problem');
+
+        return $response;
     }
 
     /**
