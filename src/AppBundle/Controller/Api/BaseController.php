@@ -16,8 +16,7 @@ class BaseController extends Controller
     public function createValidationErrorResponse(Form $form) {
         $apiProblem = new ApiProblem(
             Response::HTTP_BAD_REQUEST,
-            'validation_error',
-            'There was a validation error'
+            ApiProblem::TYPE_VALIDATION_ERROR
         );
 
         $apiProblem->set('errors', $this->getErrorsFromForm($form));
