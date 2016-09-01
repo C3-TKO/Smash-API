@@ -30,7 +30,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
             $apiProblem->toArray(),
             $apiProblem->getStatusCode()
         );
-        $response->headers->set('Content-Type', 'application/problem+json');
+        $response->headers->set('Content-Type', 'application/json+problem');
 
         $event->setResponse($response);
     }
