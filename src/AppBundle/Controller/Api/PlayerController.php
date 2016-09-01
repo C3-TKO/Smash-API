@@ -141,7 +141,7 @@ class PlayerController extends BaseController
         if ($data === null) {
             $apiProblem = new ApiProblem(Response::HTTP_BAD_REQUEST, ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT);
 
-            throw new ApiProblemException($apiProblem, Response::HTTP_BAD_REQUEST, 'Invalid JSON body!');
+            throw new ApiProblemException($apiProblem);
         }
 
         $clearMissing = $request->getMethod() !== 'PATCH';
