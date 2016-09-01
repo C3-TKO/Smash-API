@@ -2,9 +2,10 @@
 
 namespace AppBundle\Controller\Api;
 
+use AppBundle\Api\ApiProblem;
+use AppBundle\Api\ApiProblemException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
@@ -136,6 +137,12 @@ class PlayerController extends BaseController
     private function processForm(Request $request, Form $form)
     {
         $data = json_decode($request->getContent(), true);
+
+        if ($data === null) {
+            $apiProblem = new ApiProblem(Response::HTTP_BAD_REQUEST, ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT);
+
+            throw new ApiProblemException($apiProblem, Response::HTTP_BAD_REQUEST, 'Invalid JSON body!');
+        }
 
         $clearMissing = $request->getMethod() !== 'PATCH';
         $form->submit($data, $clearMissing);

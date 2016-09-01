@@ -197,4 +197,24 @@ class PlayerControllerTest extends ApiTestCase
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'name', 'INC.');
     }
+
+    /**
+     * @test
+     */
+    public function testInvalidJSON()
+    {
+        $invalidBody = <<<EOF
+{
+    "buggyShit" : "1337
+    "EvenMoahMalformedJSON": "I'm from a test!"
+}
+EOF;
+        $response = $this->client->post('/players', [
+            'body' => $invalidBody
+        ]);
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertyEquals($response, 'type', 'invalid_body_format');
+    }
+
 }

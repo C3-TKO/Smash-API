@@ -3,3 +3,5 @@ spec:
     type:     annotation
 api:
     resource: "@AppBundle/Controller/Api"
+    defaults:
+        _format: json
