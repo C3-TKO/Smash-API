@@ -217,4 +217,16 @@ EOF;
         $this->asserter()->assertResponsePropertyEquals($response, 'type', 'invalid_body_format');
     }
 
+    /**
+     * @test
+     */
+    public function test404Error()
+    {
+        $response = $this->client->get('/players/404');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+        $this->assertEquals('application/json+problem', $response->getHeader('Content-Type'));
+        $this->asserter()->assertResponsePropertyEquals($response, 'type', 'about:blank');
+        $this->asserter()->assertResponsePropertyEquals($response, 'title', 'Not Found');
+    }
+
 }
