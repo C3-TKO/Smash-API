@@ -38,7 +38,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
              * @see https://tools.ietf.org/html/draft-ietf-appsawg-http-problem-03#section-3.1
              */
             if ($exception instanceof HttpExceptionInterface) {
-                $apiProblem->set('details', $exception->getMessage());
+                $apiProblem->set('detail', $exception->getMessage());
             }
         }
 
