@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Api;
 
 use AppBundle\Api\ApiProblem;
+use AppBundle\Api\ApiProblemException;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
@@ -21,10 +22,7 @@ class BaseController extends Controller
 
         $apiProblem->set('errors', $this->getErrorsFromForm($form));
 
-        $response = new Response($this->serialize($apiProblem->toArray()), Response::HTTP_BAD_REQUEST);
-        $response->headers->set('Content-Type', 'application/json+problem');
-
-        return $response;
+        throw new ApiProblemException($apiProblem);
     }
 
     /**
