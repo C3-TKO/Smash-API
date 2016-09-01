@@ -14,7 +14,7 @@ class BaseController extends Controller
      * @param Form $form
      * @return Response
      */
-    public function createValidationErrorResponse(Form $form) {
+    protected function throwApiProblemValidationException(Form $form) {
         $apiProblem = new ApiProblem(
             Response::HTTP_BAD_REQUEST,
             ApiProblem::TYPE_VALIDATION_ERROR

@@ -25,7 +25,7 @@ class PlayerController extends BaseController
         $this->processForm($request, $form);
 
         if (!$form->isValid()) {
-            return $this->createValidationErrorResponse($form);
+            return $this->throwApiProblemValidationException($form);
         }
 
         // New entity persistence
@@ -99,7 +99,7 @@ class PlayerController extends BaseController
         $this->processForm($request, $form);
 
         if (!$form->isValid()) {
-            return $this->createValidationErrorResponse($form);
+            return $this->throwApiProblemValidationException($form);
         }
 
         $em = $this->getDoctrine()->getManager();
