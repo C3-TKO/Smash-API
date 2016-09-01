@@ -33,6 +33,13 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
             $apiProblem = new ApiProblem(
                 $statusCode
             );
+
+            /**
+             * @see https://tools.ietf.org/html/draft-ietf-appsawg-http-problem-03#section-3.1
+             */
+            if ($exception instanceof HttpExceptionInterface) {
+                $apiProblem->set('details', $exception->getMessage());
+            }
         }
 
         $response = new JsonResponse(

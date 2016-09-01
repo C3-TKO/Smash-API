@@ -70,7 +70,7 @@ class PlayerController extends BaseController
 
         if (!$player) {
             throw $this->createNotFoundException(sprintf(
-                'No player found with id "%s"',
+                'No player found with id %s',
                 $id
             ));
         }
@@ -90,7 +90,7 @@ class PlayerController extends BaseController
 
         if (!$player) {
             throw $this->createNotFoundException(sprintf(
-                'No player found with id "%s"',
+                'No player found with id %s',
                 $id
             ));
         }

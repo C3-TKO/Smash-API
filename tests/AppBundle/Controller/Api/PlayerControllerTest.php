@@ -227,6 +227,7 @@ EOF;
         $this->assertEquals('application/json+problem', $response->getHeader('Content-Type'));
         $this->asserter()->assertResponsePropertyEquals($response, 'type', 'about:blank');
         $this->asserter()->assertResponsePropertyEquals($response, 'title', 'Not Found');
+        $this->asserter()->assertResponsePropertyEquals($response, 'details', 'No player found with id 404');
     }
 
 }
