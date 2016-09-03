@@ -16,4 +16,12 @@ class DefaultController extends Controller
     {
         return new Response('Will show the swagger ui api definition in the future');
     }
+
+    /**
+     * @Route("/docs/errors", name="errorTypePage")
+     */
+    public function errorTypeAction(Request $request)
+    {
+        return new Response('Will display some doc on error types');
+    }
 }

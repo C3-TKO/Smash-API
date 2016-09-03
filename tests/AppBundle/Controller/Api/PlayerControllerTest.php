@@ -214,7 +214,7 @@ EOF;
         ]);
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        $this->asserter()->assertResponsePropertyEquals($response, 'type', 'invalid_body_format');
+        $this->asserter()->assertResponsePropertyContains($response, 'type', 'invalid_body_format');
     }
 
     /**
