@@ -230,4 +230,58 @@ EOF;
         $this->asserter()->assertResponsePropertyEquals($response, 'detail', 'No player found with id 404');
     }
 
+    /**
+     * @test
+     */
+    public function testPlayerCollectionPagination()
+    {
+        $playerNames = [];
+        for ($i = 0; $i < 25; $i++) {
+            $playerNames[] = 'TestPlayer' . $i;
+        }
+
+        $this->createPlayers($playerNames);
+
+        // page 1
+        $response = $this->client->get('/api/programmers');
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertyEquals(
+            $response,
+            'players[5].id',
+            6
+        );
+        $this->asserter()->assertResponsePropertyEquals(
+            $response,
+            'players[5].name',
+            'TestPlayer5'
+        );
+
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
+        $this->asserter()->assertResponsePropertyEquals($response, 'total', 25);
+        $this->asserter()->assertResponsePropertyExists($response, '_links.next');
+
+        // page 2
+        $nextLink = $this->asserter()->readResponseProperty($response, '_links.next');
+        $response = $this->client->get($nextLink);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertyEquals(
+            $response,
+            'programmers[5].name',
+            'TestPlayer15'
+        );
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
+
+        $lastLink = $this->asserter()->readResponseProperty($response, '_links.last');
+        $response = $this->client->get($lastLink);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertyEquals(
+            $response,
+            'programmers[4].name',
+            'TestPlayer24'
+        );
+
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 5);
+    }
+
 }
