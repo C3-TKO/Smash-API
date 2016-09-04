@@ -243,7 +243,7 @@ EOF;
         $this->createPlayers($playerNames);
 
         // page 1
-        $response = $this->client->get('/api/programmers');
+        $response = $this->client->get('/players');
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
             $response,
