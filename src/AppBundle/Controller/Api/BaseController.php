@@ -10,6 +10,8 @@ use Symfony\Component\Form\Form;
 
 class BaseController extends Controller
 {
+    const PAGE_DEFAULT_COUNT = 10;
+
     /**
      * @param Form $form
      * @return Response
