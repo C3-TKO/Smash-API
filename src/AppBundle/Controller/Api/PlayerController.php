@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
 use AppBundle\Entity\Player;
+use Pagerfanta\Adapter\DoctrineORMAdapter;
+use Pagerfanta\Pagerfanta;
 
 class PlayerController extends BaseController
 {
@@ -49,13 +51,30 @@ class PlayerController extends BaseController
      * @Route("/players", name="get_players")
      * @Method("GET")
      */
-    public function getCollectionAction()
+    public function getCollectionAction(Request $request)
     {
-        $players = $this->getDoctrine()
-            ->getRepository('AppBundle:Player')
-            ->findAll();
+        $page = $request->query->get('page', 1);
 
-        return $this->createApiResponse(['players' => $players]);
+        $qb = $this->getDoctrine()
+            ->getRepository('AppBundle:Player')
+            ->findAllQueryBuilder();
+
+        $adapter = new DoctrineORMAdapter($qb);
+        $pagerfanta = new Pagerfanta($adapter);
+        $pagerfanta->setMaxPerPage(self::PAGE_DEFAULT_COUNT);
+        $pagerfanta->setCurrentPage($page);
+
+        $players = [];
+        foreach ($pagerfanta->getCurrentPageResults() as $result) {
+            $players[] = $result;
+        }
+
+        $response = $this->createApiResponse([
+            'total' => $pagerfanta->getNbResults(),
+            'count' => count($players),
+            'programmers' => $players
+        ]);
+        return $response;
     }
 
     /**

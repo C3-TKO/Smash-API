@@ -1,12 +1,15 @@
 <?php
 
-/**
- * Created by PhpStorm.
- * User: tomtom
- * Date: 04.09.16
- * Time: 23:24
- */
-class PlayerRepository
-{
+namespace AppBundle\Repository;
 
+use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\Player;
+
+class PlayerRepository extends EntityRepository
+{
+    public function findAllQueryBuilder()
+    {
+        $qb = $this->createQueryBuilder('player');
+        return $qb;
+    }
 }
