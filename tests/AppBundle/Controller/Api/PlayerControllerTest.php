@@ -266,21 +266,31 @@ EOF;
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
             $response,
-            'programmers[5].name',
+            'items[5].name',
             'TestPlayer15'
         );
         $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
 
+        // last page(3)
         $lastLink = $this->asserter()->readResponseProperty($response, '_links.last');
         $response = $this->client->get($lastLink);
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
             $response,
-            'programmers[4].name',
+            'items[4].name',
             'TestPlayer24'
         );
-
         $this->asserter()->assertResponsePropertyEquals($response, 'count', 5);
+
+        // Just following the link for the prvious page
+        $prevLink = $this->asserter()->readResponseProperty($response, '_links.prev');
+        $response = $this->client->get($prevLink);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        // Just following the link for the first page
+        $firstLink = $this->asserter()->readResponseProperty($response, '_links.first');
+        $response = $this->client->get($firstLink);
+        $this->assertEquals(200, $response->getStatusCode());
     }
 
 }
