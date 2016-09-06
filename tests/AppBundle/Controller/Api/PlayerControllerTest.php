@@ -93,8 +93,8 @@ class PlayerControllerTest extends ApiTestCase
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeader('Content-Type'));
-        $this->asserter()->assertResponsePropertyIsArray($response, 'players');
-        $this->asserter()->assertResponsePropertyCount($response, 'players', 2);
+        $this->asserter()->assertResponsePropertyIsArray($response, 'items');
+        $this->asserter()->assertResponsePropertyCount($response, 'items', 2);
     }
 
     /**
@@ -247,12 +247,12 @@ EOF;
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
             $response,
-            'players[5].id',
+            'items[5].id',
             6
         );
         $this->asserter()->assertResponsePropertyEquals(
             $response,
-            'players[5].name',
+            'items[5].name',
             'TestPlayer5'
         );
 

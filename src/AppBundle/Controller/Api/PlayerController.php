@@ -12,6 +12,7 @@ use Symfony\Component\Form\Form;
 use AppBundle\Entity\Player;
 use Pagerfanta\Adapter\DoctrineORMAdapter;
 use Pagerfanta\Pagerfanta;
+use AppBundle\Pagination\PaginatedCollection;
 
 class PlayerController extends BaseController
 {
@@ -69,11 +70,12 @@ class PlayerController extends BaseController
             $players[] = $result;
         }
 
-        $response = $this->createApiResponse([
-            'total' => $pagerfanta->getNbResults(),
-            'count' => count($players),
-            'players' => $players
-        ]);
+        $paginatedCollection = new PaginatedCollection(
+            $players,
+            $pagerfanta->getNbResults()
+        );
+
+        $response = $this->createApiResponse($paginatedCollection);
         return $response;
     }
 
