@@ -10,6 +10,7 @@ class PlayerRepository extends EntityRepository
     public function findAllQueryBuilder()
     {
         $qb = $this->createQueryBuilder('player');
+        $qb->addOrderBy('player.id');
         return $qb;
     }
 }
