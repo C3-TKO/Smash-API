@@ -56,7 +56,10 @@ class ApiTestCase extends KernelTestCase
         self::$staticClient->getEmitter()
             ->on('before', function(BeforeEvent $event) {
                 $path = $event->getRequest()->getPath();
-                $event->getRequest()->setPath('/app_test.php'.$path);
+
+                if (strpos($path, '/app_test.php') !== 0) {
+                    $event->getRequest()->setPath('/app_test.php' . $path);
+                }
             }
         );
 
