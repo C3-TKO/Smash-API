@@ -145,7 +145,6 @@ class PlayerControllerTest extends ApiTestCase
         ]);
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        //$this->assertEquals('application/json', $response->getHeader('Content-Type'));
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'type',
             'title',
