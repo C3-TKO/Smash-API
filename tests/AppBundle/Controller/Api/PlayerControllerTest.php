@@ -236,7 +236,7 @@ EOF;
     public function testPlayerCollectionPagination()
     {
         $playerNames = [];
-        for ($i = 1; $i < 26; $i++) {
+        for ($i = 0; $i < 25; $i++) {
             $playerNames[] = 'TestPlayer' . $i;
         }
 

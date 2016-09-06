@@ -72,7 +72,7 @@ class PlayerController extends BaseController
         $response = $this->createApiResponse([
             'total' => $pagerfanta->getNbResults(),
             'count' => count($players),
-            'programmers' => $players
+            'players' => $players
         ]);
         return $response;
     }
