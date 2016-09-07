@@ -54,48 +54,12 @@ class PlayerController extends BaseController
      */
     public function getCollectionAction(Request $request)
     {
-        $page = $request->query->get('page', 1);
-
         $qb = $this->getDoctrine()
             ->getRepository('AppBundle:Player')
             ->findAllQueryBuilder();
-
-        $adapter = new DoctrineORMAdapter($qb);
-        $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage(self::PAGE_DEFAULT_COUNT);
-        $pagerfanta->setCurrentPage($page);
-
-        $players = [];
-        foreach ($pagerfanta->getCurrentPageResults() as $result) {
-            $players[] = $result;
-        }
-
-        $paginatedCollection = new PaginatedCollection(
-            $players,
-            $pagerfanta->getNbResults()
-        );
-
-        $route = 'get_players';
-        $routeParams = array();
-        $createLinkUrl = function($targetPage) use ($route, $routeParams) {
-            return $this->generateUrl($route, array_merge(
-                $routeParams,
-                array('page' => $targetPage)
-            ));
-        };
-
-        $paginatedCollection->addLink('self', $createLinkUrl($page));
-        $paginatedCollection->addLink('first', $createLinkUrl(1));
-        $paginatedCollection->addLink('last', $createLinkUrl($pagerfanta->getNbPages()));
-
-        if ($pagerfanta->hasNextPage()) {
-            $paginatedCollection->addLink('next', $createLinkUrl($pagerfanta->getNextPage()));
-        }
-
-        if ($pagerfanta->hasPreviousPage()) {
-            $paginatedCollection->addLink('prev', $createLinkUrl($pagerfanta->getPreviousPage()));
-        }
-
+        
+        $paginatedCollection = $this->get('pagination_factory')
+            ->createCollection($qb, $request, 'get_players');
 
         $response = $this->createApiResponse($paginatedCollection);
         return $response;
