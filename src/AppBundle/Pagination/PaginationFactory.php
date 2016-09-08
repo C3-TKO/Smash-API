@@ -34,6 +34,10 @@ class PaginationFactory
             $programmers[] = $result;
         }
         $paginatedCollection = new PaginatedCollection($programmers, $pagerfanta->getNbResults());
+
+        // make sure query parameters are included in pagination links
+        $routeParams = array_merge($routeParams, $request->query->all());
+
         $createLinkUrl = function($targetPage) use ($route, $routeParams) {
             return $this->router->generate($route, array_merge(
                 $routeParams,

@@ -232,7 +232,7 @@ EOF;
     /**
      * @test
      */
-    public function testPlayerCollectionPagination()
+    public function testPlayerCollectionPaginationWithFilter()
     {
         $playerNames = [];
         for ($i = 0; $i < 25; $i++) {
@@ -241,8 +241,10 @@ EOF;
 
         $this->createPlayers($playerNames);
 
+        $this->createPlayers(['PlayerNameToBeFilteredOut']);
+
         // page 1
-        $response = $this->client->get('/players');
+        $response = $this->client->get('/players?filter=TestPlayer');
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
             $response,

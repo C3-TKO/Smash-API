@@ -54,10 +54,12 @@ class PlayerController extends BaseController
      */
     public function getCollectionAction(Request $request)
     {
+        $filter = $request->query->get('filter');
+
         $qb = $this->getDoctrine()
             ->getRepository('AppBundle:Player')
-            ->findAllQueryBuilder();
-        
+            ->findAllQueryBuilder($filter);
+
         $paginatedCollection = $this->get('pagination_factory')
             ->createCollection($qb, $request, 'get_players');
 

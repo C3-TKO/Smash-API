@@ -7,9 +7,15 @@ use AppBundle\Entity\Player;
 
 class PlayerRepository extends EntityRepository
 {
-    public function findAllQueryBuilder()
+    public function findAllQueryBuilder($filter = '')
     {
         $qb = $this->createQueryBuilder('player');
+
+        if ($filter) {
+            $qb->andWhere('player.name LIKE :filter')
+                ->setParameter('filter', '%'.$filter.'%');
+        }
+
         $qb->addOrderBy('player.id');
         return $qb;
     }
