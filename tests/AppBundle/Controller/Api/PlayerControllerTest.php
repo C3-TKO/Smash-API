@@ -80,6 +80,7 @@ class PlayerControllerTest extends ApiTestCase
         ));
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'name', 'ACME');
+        $this->asserter()->assertResponsePropertyEquals($response, 'uri', $this->adjustUri('/players/1'));
     }
 
     /**
