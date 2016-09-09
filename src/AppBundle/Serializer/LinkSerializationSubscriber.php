@@ -4,11 +4,13 @@ namespace AppBundle\Serializer;
 
 
 use AppBundle\AppBundle;
+use Doctrine\Common\Annotations\Reader;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
 use Symfony\Component\Routing\RouterInterface;
 use AppBundle\Entity\Player;
+use AppBundle\Annotation\Link;
 
 class LinkSerializationSubscriber implements EventSubscriberInterface
 {
@@ -18,12 +20,18 @@ class LinkSerializationSubscriber implements EventSubscriberInterface
     private $router;
 
     /**
+     * @var Reader
+     */
+    private $annotationReader;
+
+    /**
      * LinkSerializationSubscriber constructor.
      * @param RouterInterface $router
      */
-    public function __construct(RouterInterface $router)
+    public function __construct(RouterInterface $router, Reader $annotationReader)
     {
         $this->router = $router;
+        $this->annotationReader = $annotationReader;
     }
 
     /**
@@ -58,15 +66,22 @@ class LinkSerializationSubscriber implements EventSubscriberInterface
          * @var JsonSerializationVisitor $visitor
          */
         $visitor = $event->getVisitor();
-        /**
-         * @var AppBundle\Entity\Player $player
-         */
-        $player = $event->getObject();
-        $visitor->addData(
-            'uri',
-            $this->router->generate('get_player', [
-                'id' => $player->getId()
-            ])
-        );
+        $object = $event->getObject();
+        $annotations = $this->annotationReader
+            ->getClassAnnotations(new \ReflectionObject($object));
+        $links = array();
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof Link) {
+                $uri = $this->router->generate(
+                    $annotation->route,
+                    $annotation->params
+                );
+                $links[$annotation->name] = $uri;
+            }
+        }
+        if ($links) {
+            $visitor->addData('_links', $links);
+        }
     }
 }

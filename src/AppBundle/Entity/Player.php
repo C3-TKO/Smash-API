@@ -3,9 +3,15 @@
 namespace AppBundle\Entity;
 
 use Symfony\Component\Validator\Constraints as Assert;
+use AppBundle\Annotation\Link;
 
 /**
  * Player
+ * @Link(
+ *  "self",
+ *  route = "get_player",
+ *  params = { "id": "object.getId()" }
+ * )
  */
 class Player
 {
