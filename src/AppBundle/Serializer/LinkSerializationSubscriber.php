@@ -8,6 +8,7 @@ use Doctrine\Common\Annotations\Reader;
 use JMS\Serializer\EventDispatcher\EventSubscriberInterface;
 use JMS\Serializer\JsonSerializationVisitor;
 use JMS\Serializer\EventDispatcher\ObjectEvent;
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Routing\RouterInterface;
 use AppBundle\Entity\Player;
 use AppBundle\Annotation\Link;
@@ -25,6 +26,11 @@ class LinkSerializationSubscriber implements EventSubscriberInterface
     private $annotationReader;
 
     /**
+     * @var ExpressionLanguage
+     */
+    private $expressionLanguage;
+
+    /**
      * LinkSerializationSubscriber constructor.
      * @param RouterInterface $router
      */
@@ -32,6 +38,7 @@ class LinkSerializationSubscriber implements EventSubscriberInterface
     {
         $this->router = $router;
         $this->annotationReader = $annotationReader;
+        $this->expressionLanguage = new ExpressionLanguage();
     }
 
     /**
@@ -54,8 +61,7 @@ class LinkSerializationSubscriber implements EventSubscriberInterface
             [
                 'event' => 'serializer.post_serialize',
                 'method' => 'onPostSerialize',
-                'format' => 'json',
-                'class' => 'AppBundle\Entity\Player'
+                'format' => 'json'
             ]
         ];
     }
@@ -75,7 +81,7 @@ class LinkSerializationSubscriber implements EventSubscriberInterface
             if ($annotation instanceof Link) {
                 $uri = $this->router->generate(
                     $annotation->route,
-                    $annotation->params
+                    $this->resolveParams($annotation->params, $object)
                 );
                 $links[$annotation->name] = $uri;
             }
@@ -83,5 +89,14 @@ class LinkSerializationSubscriber implements EventSubscriberInterface
         if ($links) {
             $visitor->addData('_links', $links);
         }
+    }
+
+    private function resolveParams(array $params, $object)
+    {
+        foreach ($params as $key => $param) {
+            $params[$key] = $this->expressionLanguage
+                ->evaluate($param, array('object' => $object));
+        }
+        return $params;
     }
 }
