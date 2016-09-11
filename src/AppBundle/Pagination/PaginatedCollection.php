@@ -26,8 +26,8 @@ use JMS\Serializer\Annotation as Serializer;
  * )
  *
  * @Link(
- *     "previous",
- *     url = "object.getUrl('previous')"
+ *     "prev",
+ *     url = "object.getUrl('prev')"
  * )
  *
  * @Serializer\ExclusionPolicy("all")
