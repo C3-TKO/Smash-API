@@ -30,6 +30,7 @@ class PaginationFactory
         $pagerfanta->setMaxPerPage(self::PAGE_DEFAULT_COUNT);
         $pagerfanta->setCurrentPage($page);
         $programmers = [];
+
         foreach ($pagerfanta->getCurrentPageResults() as $result) {
             $programmers[] = $result;
         }
@@ -47,12 +48,15 @@ class PaginationFactory
         $paginatedCollection->addLink('self', $createLinkUrl($page));
         $paginatedCollection->addLink('first', $createLinkUrl(1));
         $paginatedCollection->addLink('last', $createLinkUrl($pagerfanta->getNbPages()));
+
         if ($pagerfanta->hasNextPage()) {
             $paginatedCollection->addLink('next', $createLinkUrl($pagerfanta->getNextPage()));
         }
+
         if ($pagerfanta->hasPreviousPage()) {
             $paginatedCollection->addLink('prev', $createLinkUrl($pagerfanta->getPreviousPage()));
         }
+
         return $paginatedCollection;
     }
 }

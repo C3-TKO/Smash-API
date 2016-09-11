@@ -41,6 +41,52 @@ class LinkSerializationSubscriber implements EventSubscriberInterface
         $this->expressionLanguage = new ExpressionLanguage();
     }
 
+    public function onPostSerialize(ObjectEvent $event)
+    {
+        /**
+         * @var JsonSerializationVisitor $visitor
+         */
+        $visitor = $event->getVisitor();
+        $object = $event->getObject();
+        $annotations = $this->annotationReader
+            ->getClassAnnotations(new \ReflectionObject($object));
+        $links = array();
+
+        foreach ($annotations as $annotation) {
+            if ($annotation instanceof Link) {
+                if ($annotation->url) {
+                    $uri = $this->evaluate($annotation->url, $object);
+                } else {
+                    $uri = $this->router->generate(
+                        $annotation->route,
+                        $this->resolveParams($annotation->params, $object)
+                    );
+                }
+                // allow a blank URI to be an optional link
+                if ($uri) {
+                    $links[$annotation->name] = $uri;
+                }
+            }
+        }
+        if ($links) {
+            $visitor->addData('_links', $links);
+        }
+    }
+
+    private function resolveParams(array $params, $object)
+    {
+        foreach ($params as $key => $param) {
+            $params[$key] = $this->evaluate($param, $object);
+        }
+        return $params;
+    }
+
+    private function evaluate($expression, $object)
+    {
+        return $this->expressionLanguage
+            ->evaluate($expression, array('object' => $object));
+    }
+
     /**
      * Returns the events to which this class has subscribed.
      *
@@ -57,46 +103,12 @@ class LinkSerializationSubscriber implements EventSubscriberInterface
      */
     public static function getSubscribedEvents()
     {
-        return [
-            [
+        return array(
+            array(
                 'event' => 'serializer.post_serialize',
                 'method' => 'onPostSerialize',
-                'format' => 'json'
-            ]
-        ];
-    }
-
-    public function onPostSerialize(ObjectEvent $event)
-    {
-        /**
-         * @var JsonSerializationVisitor $visitor
-         */
-        $visitor = $event->getVisitor();
-        $object = $event->getObject();
-        $annotations = $this->annotationReader
-            ->getClassAnnotations(new \ReflectionObject($object));
-        $links = array();
-
-        foreach ($annotations as $annotation) {
-            if ($annotation instanceof Link) {
-                $uri = $this->router->generate(
-                    $annotation->route,
-                    $this->resolveParams($annotation->params, $object)
-                );
-                $links[$annotation->name] = $uri;
-            }
-        }
-        if ($links) {
-            $visitor->addData('_links', $links);
-        }
-    }
-
-    private function resolveParams(array $params, $object)
-    {
-        foreach ($params as $key => $param) {
-            $params[$key] = $this->expressionLanguage
-                ->evaluate($param, array('object' => $object));
-        }
-        return $params;
+                'format' => 'json',
+            )
+        );
     }
 }

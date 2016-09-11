@@ -285,7 +285,7 @@ EOF;
         );
         $this->asserter()->assertResponsePropertyEquals($response, 'count', 5);
 
-        // Just following the link for the prvious page
+        // Just following the link for the previous page
         $prevLink = $this->asserter()->readResponseProperty($response, '_links.prev');
         $response = $this->client->get($prevLink);
         $this->assertEquals(200, $response->getStatusCode());
