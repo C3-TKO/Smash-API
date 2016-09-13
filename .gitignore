@@ -54,3 +54,5 @@ Vagrantfile
 build.properties
 badminton.sql.tmp
 
+# Do not version control the jwt credentials
+/var/jwt
