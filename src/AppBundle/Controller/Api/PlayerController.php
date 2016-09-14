@@ -22,6 +22,8 @@ class PlayerController extends BaseController
      */
     public function createAction(Request $request)
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         // Input validation and handling
         $player = new Player();
         $form = $this->createForm('AppBundle\Form\PlayerType', $player);

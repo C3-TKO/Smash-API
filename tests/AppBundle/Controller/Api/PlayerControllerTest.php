@@ -296,4 +296,12 @@ EOF;
         $this->assertEquals(200, $response->getStatusCode());
     }
 
+    public function testRequiresAuthentication()
+    {
+        $response = $this->client->post('/players', [
+            'body' => '[]'
+        ]);
+        $this->assertEquals(401, $response->getStatusCode());
+    }
+
 }
