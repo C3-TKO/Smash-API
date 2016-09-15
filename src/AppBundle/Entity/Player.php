@@ -2,11 +2,15 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Annotation\Link;
 
 /**
  * Player
+ *
+ * @ORM\Table(name="players", indexes={@ORM\Index(name="name", columns={"name"})})
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\PlayerRepository")
  * @Link(
  *  "self",
  *  route = "get_player",
@@ -17,12 +21,18 @@ class Player
 {
     /**
      * @var string
+     * @ORM\Column(name="name", type="string", length=30, nullable=false)
+     *
      * @Assert\NotBlank(message="A player must have a name - except for Jaqen H'ghar - who is actually No one")
      */
     private $name;
 
     /**
      * @var boolean
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
      */
     private $id;
 
