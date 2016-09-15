@@ -20,21 +20,21 @@ use AppBundle\Annotation\Link;
 class Player
 {
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="id", type="smallint")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
      * @var string
      * @ORM\Column(name="name", type="string", length=30, nullable=false)
      *
      * @Assert\NotBlank(message="A player must have a name - except for Jaqen H'ghar - who is actually No one")
      */
     private $name;
-
-    /**
-     * @var boolean
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
 
 
     /**
