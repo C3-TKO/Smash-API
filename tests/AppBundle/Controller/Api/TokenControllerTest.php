@@ -21,4 +21,19 @@ class TokenControllerTest extends ApiTestCase
             'token'
         );
     }
+
+    public function testCreateInvalidToken() {
+        $this->createUser('thomas.kolar', 'top-secret');
+
+        $response = $this->client->post('/tokens', [
+            'auth' => ['thomas.kolar', 'doh-wrong-password']
+        ]);
+
+        $this->assertEquals(401, $response->getStatusCode());
+
+        $this->asserter()->assertResponsePropertyExists(
+            $response,
+            'token'
+        );
+    }
 }
