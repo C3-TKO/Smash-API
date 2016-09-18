@@ -3,25 +3,29 @@
 namespace AppBundle\Test;
 
 use AppBundle\Entity\Player;
+use AppBundle\Entity\User;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
+use Doctrine\ORM\EntityManager;
+use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Message\AbstractMessage;
-use GuzzleHttp\Message\ResponseInterface;
-use GuzzleHttp\Subscriber\History;
-use GuzzleHttp\Event\BeforeEvent;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Middleware;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ApiTestCase extends KernelTestCase
 {
     private static $staticClient;
 
     /**
-     * @var History
+     * @var array
      */
-    private static $history;
+    private static $history = array();
 
     /**
      * @var Client
@@ -31,7 +35,7 @@ class ApiTestCase extends KernelTestCase
     /**
      * @var ConsoleOutput
      */
-    protected $output;
+    private $output;
 
     /**
      * @var ResponseAsserter
@@ -45,27 +49,28 @@ class ApiTestCase extends KernelTestCase
 
     public static function setUpBeforeClass()
     {
-        self::$staticClient = new Client([
-            'base_url' => getenv('TEST_BASE_URL'),
-            'defaults' => [
-                'exceptions' => false
-            ]
-        ]);
+        $handler = HandlerStack::create();
 
-        // guaranteeing that /app_test.php is prefixed to all URLs
-        self::$staticClient->getEmitter()
-            ->on('before', function(BeforeEvent $event) {
-                $path = $event->getRequest()->getPath();
-
-                if (strpos($path, '/app_test.php') !== 0) {
-                    $event->getRequest()->setPath('/app_test.php' . $path);
-                }
+        $handler->push(Middleware::history(self::$history));
+        $handler->push(Middleware::mapRequest(function(RequestInterface $request) {
+            $path = $request->getUri()->getPath();
+            if (strpos($path, '/app_test.php') !== 0) {
+                $path = '/app_test.php' . $path;
             }
-        );
+            $uri = $request->getUri()->withPath($path);
 
-        self::$history = new History();
-        self::$staticClient->getEmitter()
-            ->attach(self::$history);
+            return $request->withUri($uri);
+        }));
+
+        $baseUrl = getenv('TEST_BASE_URL');
+        if (!$baseUrl) {
+            static::fail('No TEST_BASE_URL environmental variable set in phpunit.xml.');
+        }
+        self::$staticClient = new Client([
+            'base_uri' => $baseUrl,
+            'http_errors' => false,
+            'handler' => $handler
+        ]);
 
         self::bootKernel();
     }
@@ -73,6 +78,8 @@ class ApiTestCase extends KernelTestCase
     protected function setUp()
     {
         $this->client = self::$staticClient;
+        // reset the history
+        self::$history = array();
 
         $this->purgeDatabase();
     }
@@ -87,7 +94,7 @@ class ApiTestCase extends KernelTestCase
 
     protected function onNotSuccessfulTest($e)
     {
-        if (self::$history && $lastResponse = self::$history->getLastResponse()) {
+        if ($lastResponse = $this->getLastResponse()) {
             $this->printDebug('');
             $this->printDebug('<error>Failure!</error> when making the following request:');
             $this->printLastRequestUrl();
@@ -101,7 +108,7 @@ class ApiTestCase extends KernelTestCase
 
     private function purgeDatabase()
     {
-        $purger = new ORMPurger($this->getService('doctrine.orm.default_entity_manager'));
+        $purger = new ORMPurger($this->getService('doctrine')->getManager());
         $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
         $purger->purge();
     }
@@ -114,10 +121,10 @@ class ApiTestCase extends KernelTestCase
 
     protected function printLastRequestUrl()
     {
-        $lastRequest = self::$history->getLastRequest();
+        $lastRequest = $this->getLastRequest();
 
         if ($lastRequest) {
-            $this->printDebug(sprintf('<comment>%s</comment>: <info>%s</info>', $lastRequest->getMethod(), $lastRequest->getUrl()));
+            $this->printDebug(sprintf('<comment>%s</comment>: <info>%s</info>', $lastRequest->getMethod(), $lastRequest->getUri()));
         } else {
             $this->printDebug('No request was made.');
         }
@@ -125,10 +132,13 @@ class ApiTestCase extends KernelTestCase
 
     protected function debugResponse(ResponseInterface $response)
     {
-        $this->printDebug(AbstractMessage::getStartLineAndHeaders($response));
+        foreach ($response->getHeaders() as $name => $values) {
+            $this->printDebug(sprintf('%s: %s', $name, implode(', ', $values)));
+        }
         $body = (string) $response->getBody();
 
         $contentType = $response->getHeader('Content-Type');
+        $contentType = $contentType[0];
         if ($contentType == 'application/json' || strpos($contentType, '+json') !== false) {
             $data = json_decode($body);
             if ($data === null) {
@@ -180,7 +190,7 @@ class ApiTestCase extends KernelTestCase
 
                 $profilerUrl = $response->getHeader('X-Debug-Token-Link');
                 if ($profilerUrl) {
-                    $fullProfilerUrl = $response->getHeader('Host').$profilerUrl;
+                    $fullProfilerUrl = $response->getHeader('Host').$profilerUrl[0];
                     $this->printDebug('');
                     $this->printDebug(sprintf(
                         'Profiler URL: <comment>%s</comment>',
@@ -206,18 +216,8 @@ class ApiTestCase extends KernelTestCase
         if ($this->output === null) {
             $this->output = new ConsoleOutput();
         }
-        $this->output->writeln($string);
-    }
 
-    /**
-     * @return ResponseAsserter
-     */
-    protected function asserter()
-    {
-        if ($this->responseAsserter === null) {
-            $this->responseAsserter = new ResponseAsserter();
-        }
-        return $this->responseAsserter;
+        $this->output->writeln($string);
     }
 
     /**
@@ -236,25 +236,71 @@ class ApiTestCase extends KernelTestCase
     }
 
     /**
+     * @return RequestInterface
+     */
+    private function getLastRequest()
+    {
+        if (!self::$history || empty(self::$history)) {
+            return null;
+        }
+
+        $history = self::$history;
+
+        $last = array_pop($history);
+
+        return $last['request'];
+    }
+
+    /**
+     * @return ResponseInterface
+     */
+    private function getLastResponse()
+    {
+        if (!self::$history || empty(self::$history)) {
+            return null;
+        }
+
+        $history = self::$history;
+
+        $last = array_pop($history);
+
+        return $last['response'];
+    }
+
+    protected function createUser($username, $plainPassword = 'foo')
+    {
+        $user = new User();
+        $user->setUsername($username);
+        $user->setEmail($username.'@foo.com');
+        $password = $this->getService('security.password_encoder')
+            ->encodePassword($user, $plainPassword);
+        $user->setPassword($password);
+
+        $em = $this->getEntityManager();
+        $em->persist($user);
+        $em->flush();
+
+        return $user;
+    }
+
+    /**
+     * @return ResponseAsserter
+     */
+    protected function asserter()
+    {
+        if ($this->responseAsserter === null) {
+            $this->responseAsserter = new ResponseAsserter();
+        }
+
+        return $this->responseAsserter;
+    }
+
+    /**
      * @return EntityManager
      */
     protected function getEntityManager()
     {
         return $this->getService('doctrine.orm.entity_manager');
-    }
-
-    /**
-     * @param array $names
-     */
-    protected function createPlayers(array $names)
-    {
-        foreach($names as $name) {
-            $player = new Player();
-            $player->setName($name);
-
-            $this->getEntityManager()->persist($player);
-            $this->getEntityManager()->flush();
-        }
     }
 
     /**
