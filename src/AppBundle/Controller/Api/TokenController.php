@@ -40,4 +40,14 @@ class TokenController extends BaseController
 
         return new JsonResponse(['token' => $token]);
     }
+
+    /**
+     * @return Response
+     *
+     * @Route("/dummy", name="security_login_check")
+     * @Route("/dummy", name="security_login_form")
+     */
+    public function dummy() {
+        return new Response('DOH');
+    }
 }
