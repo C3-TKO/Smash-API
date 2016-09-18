@@ -20,13 +20,17 @@ security:
             pattern: ^/
             anonymous: true
             form_login:
-               # The route name that the login form submits to
-               check_path: security_login_check
-               login_path: security_login_form
+                 # The route name that the login form submits to
+                 check_path: security_login_check
+                 login_path: security_login_form
 
             logout:
-               # The route name the user can go to in order to logout
-               path: security_logout
+                 # The route name the user can go to in order to logout
+                 path: security_logout
+
+            guard:
+                authenticators:
+                    - 'jwt_token_authenticator'
     access_control:
         - { path: ^/_wdt|_profiler, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # allow anonymous API - if auth is needed, it's handled in the controller

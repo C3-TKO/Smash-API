@@ -16,9 +16,17 @@ class PlayerControllerTest extends ApiTestCase
             'name' => 'ACME'
         );
 
+        $token = $this->getService('lexik_jwt_authentication.encoder')
+            ->encode(['username' => 'thomas.kolar']);
+
+        // 1) Create a programmer resource
         $response = $this->client->post('/players', [
-            'body' => json_encode($data)
+            'body' => json_encode($data),
+            'headers' => [
+                'Authorization' => 'Bearer '.$token
+            ]
         ]);
+
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeader('Content-Type'));
         $this->assertStringEndsWith('/players/1', $response->getHeader('Location'));
