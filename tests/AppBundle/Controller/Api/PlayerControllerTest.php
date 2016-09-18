@@ -12,6 +12,8 @@ class PlayerControllerTest extends ApiTestCase
      */
     public function postAValidPlayerShouldCreateANewPlayerEntity()
     {
+        $this->createUser('thomas.kolar');
+
         $data = array(
             'name' => 'ACME'
         );
