@@ -304,6 +304,20 @@ class ApiTestCase extends KernelTestCase
     }
 
     /**
+     * @param array $names
+     */
+    protected function createPlayers(array $names)
+    {
+        foreach($names as $name) {
+            $player = new Player();
+            $player->setName($name);
+
+            $this->getEntityManager()->persist($player);
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
      * Call this when you want to compare URLs in a test
      *
      * (since the returned URL's will have /app_test.php in front)
