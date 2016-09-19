@@ -56,7 +56,8 @@ class PlayerControllerTest extends ApiTestCase
         $data = array();
 
         $response = $this->client->post('/players', [
-            'body' => json_encode($data)
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
         //$this->assertEquals('application/json', $response->getHeader('Content-Type'));
@@ -85,7 +86,7 @@ class PlayerControllerTest extends ApiTestCase
         $response = $this->client->get('/players/1');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'
@@ -105,7 +106,7 @@ class PlayerControllerTest extends ApiTestCase
         $response = $this->client->get('/players');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertyIsArray($response, 'items');
         $this->asserter()->assertResponsePropertyCount($response, 'items', 2);
     }
@@ -123,11 +124,12 @@ class PlayerControllerTest extends ApiTestCase
         );
 
         $response = $this->client->put('/players/1', [
-            'body' => json_encode($data)
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'
@@ -154,7 +156,8 @@ class PlayerControllerTest extends ApiTestCase
         );
 
         $response = $this->client->put('/players/1', [
-            'body' => json_encode($data)
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
@@ -165,7 +168,7 @@ class PlayerControllerTest extends ApiTestCase
         ));
         $this->asserter()->assertResponsePropertyExists($response, 'errors.name');
         $this->asserter()->assertResponsePropertyEquals($response, 'errors.name[0]', 'A player must have a name - except for Jaqen H\'ghar - who is actually No one');
-        $this->assertEquals('application/json+problem', $response->getHeader('Content-Type'));
+        $this->assertEquals('application/json+problem', $response->getHeader('Content-Type')[0]);
     }
 
     /**
@@ -197,11 +200,12 @@ class PlayerControllerTest extends ApiTestCase
         );
 
         $response = $this->client->patch('/players/1', [
-            'body' => json_encode($data)
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type'));
+        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'
@@ -222,7 +226,8 @@ class PlayerControllerTest extends ApiTestCase
 }
 EOF;
         $response = $this->client->post('/players', [
-            'body' => $invalidBody
+            'body' => $invalidBody,
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
 
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
@@ -236,7 +241,7 @@ EOF;
     {
         $response = $this->client->get('/players/404');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-        $this->assertEquals('application/json+problem', $response->getHeader('Content-Type'));
+        $this->assertEquals('application/json+problem', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertyEquals($response, 'type', 'about:blank');
         $this->asserter()->assertResponsePropertyEquals($response, 'title', 'Not Found');
         $this->asserter()->assertResponsePropertyEquals($response, 'detail', 'No player found with id 404');
