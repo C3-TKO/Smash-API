@@ -239,7 +239,8 @@ EOF;
      */
     public function test404Error()
     {
-        $response = $this->client->get('/players/404');
+        $response = $this->client->get('/players/404', [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertEquals('application/json+problem', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertyEquals($response, 'type', 'about:blank');
@@ -262,7 +263,8 @@ EOF;
         $this->createPlayers(['PlayerNameToBeFilteredOut']);
 
         // page 1
-        $response = $this->client->get('/players?filter=TestPlayer');
+        $response = $this->client->get('/players?filter=TestPlayer', [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
             $response,
@@ -281,7 +283,8 @@ EOF;
 
         // page 2
         $nextLink = $this->asserter()->readResponseProperty($response, '_links.next');
-        $response = $this->client->get($nextLink);
+        $response = $this->client->get($nextLink, [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
@@ -293,7 +296,8 @@ EOF;
 
         // last page(3)
         $lastLink = $this->asserter()->readResponseProperty($response, '_links.last');
-        $response = $this->client->get($lastLink);
+        $response = $this->client->get($lastLink, [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
             $response,
@@ -304,12 +308,14 @@ EOF;
 
         // Just following the link for the previous page
         $prevLink = $this->asserter()->readResponseProperty($response, '_links.prev');
-        $response = $this->client->get($prevLink);
+        $response = $this->client->get($prevLink, [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
         $this->assertEquals(200, $response->getStatusCode());
 
         // Just following the link for the first page
         $firstLink = $this->asserter()->readResponseProperty($response, '_links.first');
-        $response = $this->client->get($firstLink);
+        $response = $this->client->get($firstLink, [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
