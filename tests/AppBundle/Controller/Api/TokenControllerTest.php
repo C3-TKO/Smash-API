@@ -35,4 +35,16 @@ class TokenControllerTest extends ApiTestCase
         $this->asserter()->assertResponsePropertyEquals($response, 'title', 'Unauthorized');
         $this->asserter()->assertResponsePropertyEquals($response, 'detail', 'Invalid credentials.');
     }
+
+    public function testBadToken()
+    {
+        $response = $this->client->post('/players', [
+            'body' => '[]',
+            'headers' => [
+                'Authorization' => 'Bearer WRONG'
+            ]
+        ]);
+        $this->assertEquals(401, $response->getStatusCode());
+        $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
+    }
 }

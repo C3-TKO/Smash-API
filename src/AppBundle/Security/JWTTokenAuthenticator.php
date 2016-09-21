@@ -16,6 +16,7 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
 use AppBundle\Api\ApiProblem;
+use Symfony\Component\Security\Core\Exception\CustomUserMessageAuthenticationException;
 
 class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 {
@@ -75,7 +76,9 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception)
     {
-        // TODO: Implement onAuthenticationFailure() method.
+        $apiProblem = new ApiProblem(Response::HTTP_UNAUTHORIZED);
+        $apiProblem->set('detail', $exception->getMessageKey());
+        return $this->responseFactory->createResponse($apiProblem);
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
@@ -91,7 +94,6 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
     public function start(Request $request, AuthenticationException $authException = null)
     {
         $apiProblem = new ApiProblem(Response::HTTP_UNAUTHORIZED);
-        // you could translate this
         $message = $authException ? $authException->getMessageKey() : 'Missing credentials';
         $apiProblem->set('detail', $message);
 
