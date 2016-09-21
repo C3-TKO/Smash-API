@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class ApiProblem
 {
+    const CONTENT_TYPE = 'application/problem+json';
+
     const TYPE_VALIDATION_ERROR = 'validation_error';
     const TYPE_INVALID_REQUEST_BODY_FORMAT = 'invalid_body_format';
 

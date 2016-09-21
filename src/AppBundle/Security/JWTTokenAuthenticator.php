@@ -3,6 +3,7 @@
 namespace AppBundle\Security;
 
 
+use AppBundle\Api\ResponseFactory;
 use Doctrine\ORM\EntityManager;
 use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,6 +15,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Symfony\Component\Security\Guard\AbstractGuardAuthenticator;
 use Lexik\Bundle\JWTAuthenticationBundle\TokenExtractor\AuthorizationHeaderTokenExtractor;
+use AppBundle\Api\ApiProblem;
 
 class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 {
@@ -28,10 +30,16 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
      */
     private $em;
 
-    public function __construct(JWTEncoderInterface $jwtEncoder, EntityManager $em)
+    /**
+     * @var ResponseFactory
+     */
+    private $responseFactory;
+
+    public function __construct(JWTEncoderInterface $jwtEncoder, EntityManager $em, ResponseFactory $responseFactory)
     {
         $this->jwtEncoder = $jwtEncoder;
         $this->em = $em;
+        $this->responseFactory = $responseFactory;
     }
 
     public function getCredentials(Request $request)
@@ -82,8 +90,11 @@ class JWTTokenAuthenticator extends AbstractGuardAuthenticator
 
     public function start(Request $request, AuthenticationException $authException = null)
     {
-        return new JsonResponse([
-            'error' => 'auth_required'
-        ], Response::HTTP_UNAUTHORIZED);
+        $apiProblem = new ApiProblem(Response::HTTP_UNAUTHORIZED);
+        // you could translate this
+        $message = $authException ? $authException->getMessageKey() : 'Missing credentials';
+        $apiProblem->set('detail', $message);
+
+        return $this->responseFactory->createResponse($apiProblem);
     }
 }

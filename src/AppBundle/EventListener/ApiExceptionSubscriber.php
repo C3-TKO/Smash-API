@@ -10,6 +10,7 @@ namespace AppBundle\EventListener;
 
 
 use AppBundle\Api\ApiProblemException;
+use AppBundle\Api\ResponseFactory;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
@@ -27,9 +28,15 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
      */
     private $debug = false;
 
-    public function __construct($debug)
+    /**
+     * @var ResponseFactory
+     */
+    private $responseFactory;
+
+    public function __construct($debug, ResponseFactory $responseFactory)
     {
         $this->debug = $debug;
+        $this->responseFactory = $responseFactory;
     }
 
     public function onKernelException(GetResponseForExceptionEvent $event)
@@ -64,21 +71,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
             }
         }
 
-        $data = $apiProblem->toArray();
-
-        /**
-         * Provide an url for the error documentation
-         * @see: https://tools.ietf.org/html/draft-ietf-appsawg-http-problem-03#section-3
-         */
-        if ($data['type'] != 'about:blank') {
-            $data['type'] = 'http://localhost:8000/docs/errors#'.$data['type'];
-        }
-
-        $response = new JsonResponse(
-            $data,
-            $apiProblem->getStatusCode()
-        );
-        $response->headers->set('Content-Type', 'application/json+problem');
+        $response = $this->responseFactory->createResponse($apiProblem);
 
         $event->setResponse($response);
     }
