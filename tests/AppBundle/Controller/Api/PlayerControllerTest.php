@@ -182,7 +182,9 @@ class PlayerControllerTest extends ApiTestCase
     {
         $this->createPlayers(['ACME']);
 
-        $response = $this->client->delete('/players/1');
+        $response = $this->client->delete('/players/1', [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
 
         $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
 
