@@ -19,15 +19,7 @@ security:
         main:
             pattern: ^/
             anonymous: true
-            form_login:
-                 # The route name that the login form submits to
-                 check_path: security_login_check
-                 login_path: security_login_form
-
-            logout:
-                 # The route name the user can go to in order to logout
-                 path: security_logout
-
+            stateless: true
             guard:
                 authenticators:
                     - 'jwt_token_authenticator'

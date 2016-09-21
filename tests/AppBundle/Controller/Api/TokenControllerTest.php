@@ -30,10 +30,5 @@ class TokenControllerTest extends ApiTestCase
         ]);
 
         $this->assertEquals(401, $response->getStatusCode());
-
-        $this->asserter()->assertResponsePropertyExists(
-            $response,
-            'token'
-        );
     }
 }
