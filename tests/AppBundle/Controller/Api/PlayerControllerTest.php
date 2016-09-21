@@ -83,7 +83,9 @@ class PlayerControllerTest extends ApiTestCase
     {
         $this->createPlayers(['ACME']);
 
-        $response = $this->client->get('/players/1');
+        $response = $this->client->get('/players/1', [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
