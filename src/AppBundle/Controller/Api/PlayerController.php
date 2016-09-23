@@ -18,7 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 class PlayerController extends BaseController
 {
     /**
-     * @Route("/players", name="post_player")
+     * @Route("/api/players", name="post_player")
      * @Method("POST")
      */
     public function createAction(Request $request)
@@ -50,7 +50,7 @@ class PlayerController extends BaseController
     }
 
     /**
-     * @Route("/players", name="get_players")
+     * @Route("/api/players", name="get_players")
      * @Method("GET")
      */
     public function getCollectionAction(Request $request)
@@ -69,7 +69,7 @@ class PlayerController extends BaseController
     }
 
     /**
-     * @Route("/players/{id}", name="get_player")
+     * @Route("/api/players/{id}", name="get_player")
      * @Method("GET")
      */
     public function getAction($id)
@@ -89,7 +89,7 @@ class PlayerController extends BaseController
     }
 
     /**
-     * @Route("/players/{id}", name="put_player")
+     * @Route("/api/players/{id}", name="put_player")
      * @Method({"PUT", "PATCH"})
      */
     public function updateAction($id, Request $request)
@@ -120,7 +120,7 @@ class PlayerController extends BaseController
     }
 
     /**
-     * @Route("/players/{id}", name="delete_player")
+     * @Route("/api/players/{id}", name="delete_player")
      * @Method("DELETE")
      */
     public function deleteAction($id)

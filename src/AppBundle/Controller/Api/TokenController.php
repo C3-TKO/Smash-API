@@ -14,7 +14,7 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 class TokenController extends BaseController
 {
     /**
-     * @Route("/tokens", name="post_token")
+     * @Route("/api/tokens", name="post_token")
      * @Method("POST")
      */
     public function createAction(Request $request)

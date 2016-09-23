@@ -26,14 +26,14 @@ class PlayerControllerTest extends ApiTestCase
         );
 
         // 1) Create a programmer resource
-        $response = $this->client->post('/players', [
+        $response = $this->client->post('/api/players', [
             'body' => json_encode($data),
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
-        $this->assertStringEndsWith('/players/1', $response->getHeader('Location')[0]);
+        $this->assertStringEndsWith('/api/players/1', $response->getHeader('Location')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'
@@ -55,7 +55,7 @@ class PlayerControllerTest extends ApiTestCase
         // Invalid because the mandatory attribute 'name' is not set
         $data = array();
 
-        $response = $this->client->post('/players', [
+        $response = $this->client->post('/api/players', [
             'body' => json_encode($data),
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
@@ -83,7 +83,7 @@ class PlayerControllerTest extends ApiTestCase
     {
         $this->createPlayers(['ACME']);
 
-        $response = $this->client->get('/players/1', [
+        $response = $this->client->get('/api/players/1', [
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
 
@@ -95,7 +95,7 @@ class PlayerControllerTest extends ApiTestCase
         ));
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'name', 'ACME');
-        $this->asserter()->assertResponsePropertyEquals($response, '_links.self', $this->adjustUri('/players/1'));
+        $this->asserter()->assertResponsePropertyEquals($response, '_links.self', $this->adjustUri('/api/players/1'));
     }
 
     /**
@@ -105,7 +105,7 @@ class PlayerControllerTest extends ApiTestCase
     {
         $this->createPlayers(['ACME', 'INC.']);
 
-        $response = $this->client->get('/players', [
+        $response = $this->client->get('/api/players', [
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
 
@@ -127,7 +127,7 @@ class PlayerControllerTest extends ApiTestCase
             'name' => 'INC.'
         );
 
-        $response = $this->client->put('/players/1', [
+        $response = $this->client->put('/api/players/1', [
             'body' => json_encode($data),
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
@@ -159,7 +159,7 @@ class PlayerControllerTest extends ApiTestCase
             'name' => null
         );
 
-        $response = $this->client->put('/players/1', [
+        $response = $this->client->put('/api/players/1', [
             'body' => json_encode($data),
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
@@ -182,7 +182,7 @@ class PlayerControllerTest extends ApiTestCase
     {
         $this->createPlayers(['ACME']);
 
-        $response = $this->client->delete('/players/1', [
+        $response = $this->client->delete('/api/players/1', [
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
 
@@ -205,7 +205,7 @@ class PlayerControllerTest extends ApiTestCase
             'name' => 'INC.'
         );
 
-        $response = $this->client->patch('/players/1', [
+        $response = $this->client->patch('/api/players/1', [
             'body' => json_encode($data),
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
@@ -231,7 +231,7 @@ class PlayerControllerTest extends ApiTestCase
     "EvenMoahMalformedJSON": "I'm from a test!"
 }
 EOF;
-        $response = $this->client->post('/players', [
+        $response = $this->client->post('/api/players', [
             'body' => $invalidBody,
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
@@ -245,7 +245,7 @@ EOF;
      */
     public function test404Error()
     {
-        $response = $this->client->get('/players/404', [
+        $response = $this->client->get('/api/players/404', [
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
@@ -269,7 +269,7 @@ EOF;
         $this->createPlayers(['PlayerNameToBeFilteredOut']);
 
         // page 1
-        $response = $this->client->get('/players?filter=TestPlayer', [
+        $response = $this->client->get('/api/players?filter=TestPlayer', [
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
@@ -327,7 +327,7 @@ EOF;
 
     public function testRequiresAuthentication()
     {
-        $response = $this->client->post('/players', [
+        $response = $this->client->post('/api/players', [
             'body' => '[]'
         ]);
         $this->assertEquals(401, $response->getStatusCode());

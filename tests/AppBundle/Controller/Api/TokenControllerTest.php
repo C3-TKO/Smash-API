@@ -10,7 +10,7 @@ class TokenControllerTest extends ApiTestCase
     public function testCreateToken() {
         $this->createUser('thomas.kolar', 'top-secret');
 
-        $response = $this->client->post('/tokens', [
+        $response = $this->client->post('/api/tokens', [
             'auth' => ['thomas.kolar', 'top-secret']
         ]);
 
@@ -25,7 +25,7 @@ class TokenControllerTest extends ApiTestCase
     public function testCreateInvalidToken() {
         $this->createUser('thomas.kolar', 'top-secret');
 
-        $response = $this->client->post('/tokens', [
+        $response = $this->client->post('/api/tokens', [
             'auth' => ['thomas.kolar', 'doh-wrong-password']
         ]);
 
@@ -38,7 +38,7 @@ class TokenControllerTest extends ApiTestCase
 
     public function testBadToken()
     {
-        $response = $this->client->post('/players', [
+        $response = $this->client->post('/api/players', [
             'body' => '[]',
             'headers' => [
                 'Authorization' => 'Bearer WRONG'
