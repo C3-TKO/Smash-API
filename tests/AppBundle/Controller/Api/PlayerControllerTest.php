@@ -83,9 +83,7 @@ class PlayerControllerTest extends ApiTestCase
     {
         $this->createPlayers(['ACME']);
 
-        $response = $this->client->get('/api/players/1', [
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
-        ]);
+        $response = $this->client->get('/api/players/1');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
@@ -105,9 +103,7 @@ class PlayerControllerTest extends ApiTestCase
     {
         $this->createPlayers(['ACME', 'INC.']);
 
-        $response = $this->client->get('/api/players', [
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
-        ]);
+        $response = $this->client->get('/api/players');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
@@ -245,8 +241,7 @@ EOF;
      */
     public function test404Error()
     {
-        $response = $this->client->get('/api/players/404', [
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
+        $response = $this->client->get('/api/players/404');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertyEquals($response, 'type', 'about:blank');
@@ -269,8 +264,7 @@ EOF;
         $this->createPlayers(['PlayerNameToBeFilteredOut']);
 
         // page 1
-        $response = $this->client->get('/api/players?filter=TestPlayer&pageSize=10', [
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
+        $response = $this->client->get('/api/players?filter=TestPlayer&pageSize=10');
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
             $response,
@@ -289,8 +283,7 @@ EOF;
 
         // page 2
         $nextLink = $this->asserter()->readResponseProperty($response, '_links.next');
-        $response = $this->client->get($nextLink, [
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
+        $response = $this->client->get($nextLink);
 
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
@@ -302,8 +295,7 @@ EOF;
 
         // last page(3)
         $lastLink = $this->asserter()->readResponseProperty($response, '_links.last');
-        $response = $this->client->get($lastLink, [
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
+        $response = $this->client->get($lastLink);
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
             $response,
@@ -314,14 +306,12 @@ EOF;
 
         // Just following the link for the previous page
         $prevLink = $this->asserter()->readResponseProperty($response, '_links.prev');
-        $response = $this->client->get($prevLink, [
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
+        $response = $this->client->get($prevLink);
         $this->assertEquals(200, $response->getStatusCode());
 
         // Just following the link for the first page
         $firstLink = $this->asserter()->readResponseProperty($response, '_links.first');
-        $response = $this->client->get($firstLink, [
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
+        $response = $this->client->get($firstLink);
         $this->assertEquals(200, $response->getStatusCode());
     }
 
