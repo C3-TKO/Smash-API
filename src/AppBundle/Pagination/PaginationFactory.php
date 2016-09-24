@@ -33,16 +33,21 @@ class PaginationFactory
         if ( $count > self::MAX_PAGE_COUNT ) {
             $count = self::MAX_PAGE_COUNT;
         }
+
+        if( $count <= 0 ) {
+            $count = self::PAGE_DEFAULT_COUNT;
+        }
+
         $adapter = new DoctrineORMAdapter($qb);
         $pagerfanta = new Pagerfanta($adapter);
         $pagerfanta->setMaxPerPage($count);
         $pagerfanta->setCurrentPage($page);
-        $programmers = [];
+        $players = [];
 
         foreach ($pagerfanta->getCurrentPageResults() as $result) {
-            $programmers[] = $result;
+            $players[] = $result;
         }
-        $paginatedCollection = new PaginatedCollection($programmers, $pagerfanta->getNbResults());
+        $paginatedCollection = new PaginatedCollection($players, $pagerfanta->getNbResults());
 
         // make sure query parameters are included in pagination links
         $routeParams = array_merge($routeParams, $request->query->all());
