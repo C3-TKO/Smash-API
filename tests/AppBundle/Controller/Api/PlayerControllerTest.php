@@ -260,7 +260,7 @@ EOF;
     public function testPlayerCollectionPaginationWithFilter()
     {
         $playerNames = [];
-        for ($i = 0; $i < 50; $i++) {
+        for ($i = 0; $i < 25; $i++) {
             $playerNames[] = 'TestPlayer' . $i;
         }
 
@@ -269,7 +269,7 @@ EOF;
         $this->createPlayers(['PlayerNameToBeFilteredOut']);
 
         // page 1
-        $response = $this->client->get('/api/players?filter=TestPlayer', [
+        $response = $this->client->get('/api/players?filter=TestPlayer&pageSize=10', [
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
         $this->assertEquals(200, $response->getStatusCode());
         $this->asserter()->assertResponsePropertyEquals(
@@ -283,8 +283,8 @@ EOF;
             'TestPlayer5'
         );
 
-        $this->asserter()->assertResponsePropertyEquals($response, 'count', 20);
-        $this->asserter()->assertResponsePropertyEquals($response, 'total', 50);
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
+        $this->asserter()->assertResponsePropertyEquals($response, 'total', 25);
         $this->asserter()->assertResponsePropertyExists($response, '_links.next');
 
         // page 2
@@ -296,9 +296,9 @@ EOF;
         $this->asserter()->assertResponsePropertyEquals(
             $response,
             'items[5].name',
-            'TestPlayer25'
+            'TestPlayer15'
         );
-        $this->asserter()->assertResponsePropertyEquals($response, 'count', 20);
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
 
         // last page(3)
         $lastLink = $this->asserter()->readResponseProperty($response, '_links.last');
@@ -308,9 +308,9 @@ EOF;
         $this->asserter()->assertResponsePropertyEquals(
             $response,
             'items[4].name',
-            'TestPlayer44'
+            'TestPlayer24'
         );
-        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 5);
 
         // Just following the link for the previous page
         $prevLink = $this->asserter()->readResponseProperty($response, '_links.prev');
