@@ -13,20 +13,16 @@ consumes:
   - application/json
 produces:
   - application/json
+  - application/problem+json
 
 paths:
   /players:
     get:
       description: |
         Gets `Player` objects.
-        Optional query param of **size** determines
-        size of returned array
       parameters:
-        - name: size
-          in: query
-          description: Size of array
-          type: number
-          format: int
+        - $ref: '#/parameters/pageNumber'
+        - $ref: '#/parameters/pageSize'
       responses:
         200:
           description: Successful response
@@ -61,7 +57,7 @@ paths:
         - name: id
           in: path
           type: number
-          format: int
+          format: integer
           description: ID of the player
           required: true
       responses:
@@ -76,7 +72,7 @@ paths:
         - name: id
           in: path
           type: number
-          format: int
+          format: integer
           description: ID of the player
           required: true
         - name: player
@@ -95,7 +91,7 @@ paths:
         - name: id
           in: path
           type: number
-          format: int
+          format: integer
           description: ID of the player
           required: true
       responses:
@@ -108,8 +104,21 @@ definitions:
     properties:
       id:
         type: number
-        format: int
+        format: integer
         description: Unique identifier representing a specific player.
       name:
         type: string
         description: Name of a player.
+parameters:
+  pageSize:
+    name: pageSize
+    in: query
+    description: Number of entities returned
+    type: integer
+    default: 20
+  pageNumber:
+    name: pageNumber
+    in: query
+    description: Page number
+    type: integer
+    default: 1
