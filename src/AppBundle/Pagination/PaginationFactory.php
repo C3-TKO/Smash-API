@@ -10,7 +10,8 @@ use Symfony\Component\Routing\RouterInterface;
 
 class PaginationFactory
 {
-    const PAGE_DEFAULT_COUNT = 10;
+    const PAGE_DEFAULT_COUNT = 20;
+    const MAX_PAGE_COUNT = 100;
 
     /**
      * @var RouterInterface
@@ -24,10 +25,14 @@ class PaginationFactory
 
     public function createCollection(QueryBuilder $qb, Request $request, $route, array $routeParams = array())
     {
-        $page = $request->query->get('page', 1);
+        $page = $request->query->get('pageNumber', 1);
+        $count = $request->query->get('pageSize', self::PAGE_DEFAULT_COUNT);
+        if ( $count > self::MAX_PAGE_COUNT ) {
+            $count = self::MAX_PAGE_COUNT;
+        }
         $adapter = new DoctrineORMAdapter($qb);
         $pagerfanta = new Pagerfanta($adapter);
-        $pagerfanta->setMaxPerPage(self::PAGE_DEFAULT_COUNT);
+        $pagerfanta->setMaxPerPage($count);
         $pagerfanta->setCurrentPage($page);
         $programmers = [];
 
