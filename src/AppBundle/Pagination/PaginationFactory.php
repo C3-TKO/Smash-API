@@ -13,6 +13,9 @@ class PaginationFactory
     const PAGE_DEFAULT_COUNT = 20;
     const MAX_PAGE_COUNT = 100;
 
+    const PARAMETER_NAME_PAGE_NUMBER = 'pageNumber';
+    const PARAMETER_NAME_PAGE_SIZE = 'pageSize';
+
     /**
      * @var RouterInterface
      */
@@ -25,8 +28,8 @@ class PaginationFactory
 
     public function createCollection(QueryBuilder $qb, Request $request, $route, array $routeParams = array())
     {
-        $page = $request->query->get('pageNumber', 1);
-        $count = $request->query->get('pageSize', self::PAGE_DEFAULT_COUNT);
+        $page = $request->query->get(self::PARAMETER_NAME_PAGE_NUMBER, 1);
+        $count = $request->query->get(self::PARAMETER_NAME_PAGE_SIZE, self::PAGE_DEFAULT_COUNT);
         if ( $count > self::MAX_PAGE_COUNT ) {
             $count = self::MAX_PAGE_COUNT;
         }
@@ -47,7 +50,7 @@ class PaginationFactory
         $createLinkUrl = function($targetPage) use ($route, $routeParams) {
             return $this->router->generate($route, array_merge(
                 $routeParams,
-                array('page' => $targetPage)
+                array(self::PARAMETER_NAME_PAGE_NUMBER => $targetPage)
             ));
         };
         $paginatedCollection->addLink('self', $createLinkUrl($page));

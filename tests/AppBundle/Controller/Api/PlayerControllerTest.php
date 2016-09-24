@@ -260,7 +260,7 @@ EOF;
     public function testPlayerCollectionPaginationWithFilter()
     {
         $playerNames = [];
-        for ($i = 0; $i < 25; $i++) {
+        for ($i = 0; $i < 50; $i++) {
             $playerNames[] = 'TestPlayer' . $i;
         }
 
@@ -283,8 +283,8 @@ EOF;
             'TestPlayer5'
         );
 
-        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
-        $this->asserter()->assertResponsePropertyEquals($response, 'total', 25);
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 20);
+        $this->asserter()->assertResponsePropertyEquals($response, 'total', 50);
         $this->asserter()->assertResponsePropertyExists($response, '_links.next');
 
         // page 2
@@ -296,9 +296,9 @@ EOF;
         $this->asserter()->assertResponsePropertyEquals(
             $response,
             'items[5].name',
-            'TestPlayer15'
+            'TestPlayer25'
         );
-        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 20);
 
         // last page(3)
         $lastLink = $this->asserter()->readResponseProperty($response, '_links.last');
@@ -308,9 +308,9 @@ EOF;
         $this->asserter()->assertResponsePropertyEquals(
             $response,
             'items[4].name',
-            'TestPlayer24'
+            'TestPlayer44'
         );
-        $this->asserter()->assertResponsePropertyEquals($response, 'count', 5);
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
 
         // Just following the link for the previous page
         $prevLink = $this->asserter()->readResponseProperty($response, '_links.prev');
