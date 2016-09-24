@@ -27,10 +27,20 @@ paths:
         200:
           description: Successful response
           schema:
-            title: ArrayOfPlayers
-            type: array
-            items:
-              $ref: '#/definitions/Player'
+            type: object
+            properties:
+              items:
+                type: array
+                minItems: 0
+                maxItems: 100
+                uniqueItems: true
+                $ref: '#/definitions/Player'
+              total:
+                type: integer
+              count:
+                type: integer
+              _links:
+                $ref: '#/definitions/PaginationLinks'
     post:
       description: |
         Creates a new `Player` model
@@ -109,6 +119,35 @@ definitions:
       name:
         type: string
         description: Name of a player.
+
+  PaginationLinks:
+    type: object
+    properties:
+      self:
+        type: string
+        description: URI of this collection
+        format: url
+      first:
+        type: string
+        description: URI of the first set of this collection
+        format: url
+      last:
+        type: string
+        description: URI of the last set of this collection
+        format: url
+      prev:
+        type: string
+        description: URI of the previous set of this collection
+        format: url
+      next:
+        type: string
+        description: URI of the next set of this collection
+        format: url
+    required:
+    - self
+    - first
+    - last
+
 parameters:
   pageSize:
     name: pageSize
@@ -116,9 +155,14 @@ parameters:
     description: Number of entities returned
     type: integer
     default: 20
+    required: false
+
   pageNumber:
     name: pageNumber
     in: query
     description: Page number
     type: integer
     default: 1
+    maximum: 100
+    minimum: 1
+    required: false
