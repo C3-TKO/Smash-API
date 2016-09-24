@@ -15,14 +15,17 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
-        main:
-            pattern: ^/
+        api:
+            pattern: ^/api
             anonymous: true
             stateless: true
             guard:
                 authenticators:
                     - 'jwt_token_authenticator'
+        spec:
+            pattern: ^/
+            security: false
+
     access_control:
         - { path: ^/_wdt|_profiler, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         # allow anonymous API - if auth is needed, it's handled in the controller
