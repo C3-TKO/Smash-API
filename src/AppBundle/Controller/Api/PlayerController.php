@@ -12,12 +12,10 @@ use Symfony\Component\Form\Form;
 use AppBundle\Entity\Player;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Security;
 
-/**
- * @Security("is_granted('ROLE_USER')")
- */
 class PlayerController extends BaseController
 {
     /**
+     * @Security("is_granted('ROLE_USER')")
      * @Route("/api/players", name="post_player")
      * @Method("POST")
      */
@@ -89,6 +87,7 @@ class PlayerController extends BaseController
     }
 
     /**
+     * @Security("is_granted('ROLE_USER')")
      * @Route("/api/players/{id}", name="put_player")
      * @Method({"PUT", "PATCH"})
      */
@@ -120,6 +119,7 @@ class PlayerController extends BaseController
     }
 
     /**
+     * @Security("is_granted('ROLE_USER')")
      * @Route("/api/players/{id}", name="delete_player")
      * @Method("DELETE")
      */
