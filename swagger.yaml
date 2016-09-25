@@ -19,7 +19,7 @@ paths:
   /players:
     get:
       description: |
-        Gets `Player` objects.
+        Gets a list of `Player` objects.
       parameters:
         - $ref: '#/parameters/pageNumber'
         - $ref: '#/parameters/pageSize'
@@ -34,7 +34,8 @@ paths:
                 minItems: 0
                 maxItems: 100
                 uniqueItems: true
-                $ref: '#/definitions/Player'
+                items:
+                  $ref: '#/definitions/Player'
               total:
                 type: integer
               count:
@@ -111,6 +112,7 @@ paths:
 definitions:
   Player:
     type: object
+    description: A model describing a badminton player
     properties:
       id:
         type: number
