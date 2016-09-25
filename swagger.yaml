@@ -54,12 +54,7 @@ paths:
           required: true
       responses:
         201:
-          description: Succesfully created
-          headers:
-            Location:
-              description: Shows the url of the created player
-              type: string
-              format: url
+          $ref: '#/responses/201'
         401:
           $ref: '#/responses/401'
   /players/{id}:
@@ -153,6 +148,13 @@ definitions:
     - last
 
 responses:
+  201:
+    description: Created
+    headers:
+      Location:
+        description: URI of the created resource
+        type: string
+        format: url
   401:
     description: Unauthorized
     schema:
