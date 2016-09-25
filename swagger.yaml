@@ -59,7 +59,9 @@ paths:
             Location:
               description: Shows the url of the created player
               type: string
-
+              format: url
+        401:
+          $ref: '#/responses/401'
   /players/{id}:
     get:
       description: |
@@ -149,6 +151,21 @@ definitions:
     - self
     - first
     - last
+
+responses:
+  401:
+    description: Unauthorized
+    schema:
+      type: object
+      properties:
+        detail:
+          type: string
+        status:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
 
 parameters:
   pageSize:
