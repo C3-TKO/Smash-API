@@ -1,0 +1,131 @@
+#%RAML 0.8
+title: Smash API
+version: 0.0.1
+documentation:
+- title: Smash API
+  content: API for http://smash.cologne
+baseUri: http://smash.cologne/api
+schemas:
+- PlayersResponse: |
+    {
+      "id": "PlayersResponse",
+      "title": "PlayersResponse",
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "id": "Player",
+            "title": "Player",
+            "description": "A model describing a badminton player",
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "Unique identifier representing a specific player.",
+                "type": "number"
+              },
+              "name": {
+                "description": "Name of a player.",
+                "type": "string"
+              }
+            }
+          }
+        },
+        "total": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "_links": {
+          "type": "object"
+        }
+      }
+    }
+- Player: |
+    {
+      "id": "Player",
+      "title": "Player",
+      "description": "A model describing a badminton player",
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "Unique identifier representing a specific player.",
+          "type": "number"
+        },
+        "name": {
+          "description": "Name of a player.",
+          "type": "string"
+        }
+      }
+    }
+/players:
+  /{id}:
+    uriParameters:
+      id:
+        description: ID of the player
+        type: number
+        required: true
+        displayName: id
+    get:
+      displayName: PlayersById
+      description: >
+        Gets a specific `Player` object identified by its id
+      responses:
+        200:
+          description: Succesful response
+          body:
+            application/json:
+              schema: Player
+    put:
+      body:
+        application/json:
+          schema: Player
+      displayName: PlayersById
+      description: >
+        Updates a specific `Player` model identified by its id
+      responses:
+        200:
+          description: Succesful response
+    delete:
+      displayName: PlayersById
+      description: >
+        Deletes a `Player` model
+      responses: {}
+  get:
+    displayName: Players
+    description: >
+      Gets a list of `Player` objects.
+    responses:
+      200:
+        description: Successful response
+        body:
+          application/json:
+            schema: PlayersResponse
+    queryParameters:
+      pageNumber:
+        description: Page number
+        type: integer
+        default: 1
+        required: false
+        displayName: pageNumber
+      pageSize:
+        description: Number of entities returned
+        type: integer
+        default: 20
+        required: false
+        displayName: pageSize
+  post:
+    body:
+      application/json:
+        schema: Player
+    displayName: Players
+    description: >
+      Creates a new `Player` model
+    responses:
+      200:
+        description: Created
+      401:
+        description: Unauthorized
