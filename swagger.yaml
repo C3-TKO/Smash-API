@@ -104,7 +104,13 @@ paths:
           required: true
       responses:
         200:
-          description: OK
+          description: Player deleted
+  /tokens:
+    post:
+      description: Creates a JWT authentication token
+      responses:
+        200:
+          description: Token created
 
 definitions:
   Player:
