@@ -9,6 +9,10 @@ host: smash.cologne
 basePath: /api
 schemes:
   - http
+securityDefinitions:
+  basicAuth:
+    type: basic
+    description: HTTP Basic Authentication. Works over `HTTP` and `HTTPS`
 consumes:
   - application/json
 produces:
@@ -108,9 +112,15 @@ paths:
   /tokens:
     post:
       description: Creates a JWT authentication token
+      security:
+       - basicAuth: []
       responses:
         200:
           description: Token created
+        401:
+          $ref: '#/responses/401'
+        404:
+          $ref: '#/responses/404'
 
 definitions:
   Player:
@@ -163,6 +173,19 @@ responses:
         format: url
   401:
     description: Unauthorized
+    schema:
+      type: object
+      properties:
+        detail:
+          type: string
+        status:
+          type: string
+        type:
+          type: string
+        title:
+          type: string
+  404:
+    description: Not Found
     schema:
       type: object
       properties:
