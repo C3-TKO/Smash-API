@@ -197,7 +197,7 @@ responses:
         detail:
           type: string
         status:
-          type: string
+          type: integer
         type:
           type: string
         title:
@@ -210,7 +210,7 @@ responses:
         detail:
           type: string
         status:
-          type: string
+          type: integer
         type:
           type: string
         title:
