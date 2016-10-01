@@ -47,7 +47,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
             ? $exception->getStatusCode()
             : Response::HTTP_INTERNAL_SERVER_ERROR;
 
-        // Allow HTTP 500 on ognoing exception to be handled by symfony when running in debug mode
+        // Allow HTTP 500 on ongoing exception to be handled by symfony when running in debug mode
         if ($this->debug && $statusCode >= Response::HTTP_INTERNAL_SERVER_ERROR) {
             return;
         }
