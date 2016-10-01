@@ -59,6 +59,8 @@ paths:
       responses:
         201:
           $ref: '#/responses/201'
+        400:
+          $ref: '#/responses/400'
         401:
           $ref: '#/responses/401'
   /players/{id}:
@@ -176,6 +178,17 @@ responses:
         description: URI of the created resource
         type: string
         format: url
+  400:
+    description: Bad Request
+    schema:
+      type: object
+      properties:
+        status:
+          type: integer
+        type:
+          type: string
+        title:
+          type: string
   401:
     description: Unauthorized
     schema:
