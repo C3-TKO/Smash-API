@@ -79,6 +79,8 @@ paths:
           description: Succesful response
           schema:
             $ref: '#/definitions/Player'
+        404:
+          $ref: '#/responses/404'
     put:
       description: |
         Updates a specific `Player` model identified by its id
