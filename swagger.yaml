@@ -52,10 +52,10 @@ paths:
       parameters:
         - name: player
           in: body
-          description: The update player model
-          schema:
-            $ref: '#/definitions/Player'
+          description: Model of the to be created player
           required: true
+          schema:
+            $ref: '#/definitions/NewPlayer'
       responses:
         201:
           $ref: '#/responses/201'
@@ -136,6 +136,14 @@ paths:
           $ref: '#/responses/404'
 
 definitions:
+  NewPlayer:
+    type: object
+    description: A model describing a badminton player to be created
+    properties:
+      name:
+        type: string
+        description: Name of a player.
+
   Player:
     type: object
     description: A model describing a badminton player
