@@ -117,6 +117,33 @@ paths:
       responses:
         204:
           $ref: '#/responses/204'
+  /teams:
+    get:
+      description: |
+        Gets a list of `Team` objects
+      parameters:
+        - $ref: '#/parameters/pageNumber'
+        - $ref: '#/parameters/pageSize'
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                minItems: 0
+                maxItems: 100
+                uniqueItems: true
+                items:
+                  $ref: '#/definitions/Team'
+              total:
+                type: integer
+              count:
+                type: integer
+              _links:
+                $ref: '#/definitions/PaginationLinks'
+
   /tokens:
     post:
       description: Creates a JWT authentication token
@@ -151,10 +178,30 @@ definitions:
       id:
         type: number
         format: integer
-        description: Unique identifier representing a specific player.
+        description: Unique identifier of a specific player.
       name:
         type: string
         description: Name of a player.
+
+  Team:
+    type: object
+    description: A model describing a team of badminton players
+    properties:
+      id:
+        type: number
+        format: integer
+        description: Unique identifier of a team
+      id_player_a:
+        type: number
+        format: integer
+        description: Unique identifier of a badminton player
+      id_player_b:
+        type: number
+        format: integer
+        description: Unique identifier of a badminton player
+      name:
+        type: string
+        description: The name of a team
 
   PaginationLinks:
     type: object
