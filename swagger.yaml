@@ -115,8 +115,8 @@ paths:
           description: ID of the player
           required: true
       responses:
-        200:
-          description: Player deleted
+        204:
+          $ref: '#/responses/204'
   /tokens:
     post:
       description: Creates a JWT authentication token
