@@ -186,17 +186,22 @@ definitions:
 
 responses:
   201:
-    description: Created
+    description: Resource created
     headers:
       Location:
         description: URI of the created resource
         type: string
         format: url
+  204:
+    description: Resource deleted
   400:
     description: Bad Request
     schema:
       type: object
       properties:
+        errors:
+          type: object
+          description: This object contains a property entry for each porperty that is wrong
         status:
           type: integer
         type:
