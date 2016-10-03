@@ -27,6 +27,13 @@ paths:
       parameters:
         - $ref: '#/parameters/pageNumber'
         - $ref: '#/parameters/pageSize'
+        - name: populateTeams
+          in: query
+          description: Indicates if the list of teams will be updated
+          type: boolean
+          default: false
+          required: false
+
       responses:
         200:
           description: Successful response
@@ -72,7 +79,7 @@ paths:
           in: path
           type: number
           format: integer
-          description: ID of the player
+          description: Id of the player
           required: true
       responses:
         200:
@@ -89,7 +96,7 @@ paths:
           in: path
           type: number
           format: integer
-          description: ID of the player
+          description: Id of the player
           required: true
         - name: player
           in: body
@@ -106,7 +113,7 @@ paths:
           $ref: '#/responses/404'
     delete:
       description: |
-        Deletes a `Player` model
+        Deletes a `Player` model and all teams that player is a part of
       parameters:
         - name: id
           in: path
@@ -117,6 +124,7 @@ paths:
       responses:
         204:
           $ref: '#/responses/204'
+
   /teams:
     get:
       description: |
@@ -143,6 +151,72 @@ paths:
                 type: integer
               _links:
                 $ref: '#/definitions/PaginationLinks'
+
+    post:
+      description: |
+        Creates a new `Team` model
+      parameters:
+        - name: team
+          in: body
+          description: Model of the to be created team
+          required: true
+          schema:
+            $ref: '#/definitions/NewTeam'
+      responses:
+        201:
+          $ref: '#/responses/201'
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+
+  /teams/{id}:
+    get:
+      description: |
+        Gets a specific `Team` object identified by its id
+      parameters:
+        - name: id
+          in: path
+          type: number
+          format: integer
+          description: Id of the team
+          required: true
+      responses:
+        200:
+          description: Succesful response
+          schema:
+            $ref: '#/definitions/Team'
+        404:
+          $ref: '#/responses/404'
+
+  /teams/{id}/name:
+    put:
+      description: |
+        Updates the name of a specific `Team` model identified by its id
+      parameters:
+        - name: id
+          in: path
+          type: number
+          format: integer
+          description: ID of the player
+          required: true
+        - name: name
+          in: body
+          description: New name of the team
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: The new name of a team
+          required: true
+      responses:
+        200:
+          description: Succesful response
+        400:
+          $ref: '#/responses/400'
+        404:
+          $ref: '#/responses/404'
 
   /tokens:
     post:
@@ -182,6 +256,22 @@ definitions:
       name:
         type: string
         description: Name of a player.
+
+  NewTeam:
+    type: object
+    description: A model describing a team of badminton players
+    properties:
+      id_player_a:
+        type: number
+        format: integer
+        description: Unique identifier of a badminton player
+      id_player_b:
+        type: number
+        format: integer
+        description: Unique identifier of a badminton player
+      name:
+        type: string
+        description: The name of a team
 
   Team:
     type: object
