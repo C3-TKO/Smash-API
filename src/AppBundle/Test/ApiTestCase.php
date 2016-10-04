@@ -20,6 +20,8 @@ use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class ApiTestCase extends KernelTestCase
 {
+    const USERNAME_TEST_USER = 'thomas.kolar';
+
     private static $staticClient;
 
     /**
