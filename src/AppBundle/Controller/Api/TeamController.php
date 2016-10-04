@@ -139,4 +139,22 @@ class PlayerController extends BaseController
         // Requesting an idempotant endpoint prescribes that the repsonse must always be the same
         return new Response(null, Response::HTTP_NO_CONTENT);
     }
+
+    /**
+     * @param Request $request
+     * @param Form $form
+     */
+    private function processForm(Request $request, Form $form)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        if ($data === null) {
+            $apiProblem = new ApiProblem(Response::HTTP_BAD_REQUEST, ApiProblem::TYPE_INVALID_REQUEST_BODY_FORMAT);
+
+            throw new ApiProblemException($apiProblem);
+        }
+
+        $clearMissing = $request->getMethod() !== 'PATCH';
+        $form->submit($data, $clearMissing);
+    }
 }
