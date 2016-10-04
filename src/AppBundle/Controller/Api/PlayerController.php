@@ -89,7 +89,7 @@ class PlayerController extends BaseController
     /**
      * @Security("is_granted('ROLE_USER')")
      * @Route("/api/players/{id}", name="put_player")
-     * @Method({"PUT", "PATCH"})
+     * @Method("PUT")
      */
     public function updateAction($id, Request $request)
     {

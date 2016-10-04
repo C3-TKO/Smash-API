@@ -191,32 +191,6 @@ class PlayerControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function patchPlayerShouldUpdateAPlayer()
-    {
-        $this->createPlayers(['ACME']);
-
-        $data = array(
-            'name' => 'INC.'
-        );
-
-        $response = $this->client->patch('/api/players/1', [
-            'body' => json_encode($data),
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
-        ]);
-
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
-        $this->asserter()->assertResponsePropertiesExist($response, array(
-            'id',
-            'name'
-        ));
-        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
-        $this->asserter()->assertResponsePropertyEquals($response, 'name', 'INC.');
-    }
-
-    /**
-     * @test
-     */
     public function testInvalidJSON()
     {
         $invalidBody = <<<EOF
