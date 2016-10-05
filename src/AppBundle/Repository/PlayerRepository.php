@@ -8,14 +8,14 @@ class PlayerRepository extends EntityRepository
 {
     public function findAllQueryBuilder($filter = '')
     {
-        $qb = $this->createQueryBuilder('player');
+        $qb = $this->createQueryBuilder('players');
 
         if ($filter) {
-            $qb->andWhere('player.name LIKE :filter')
+            $qb->andWhere('players.name LIKE :filter')
                 ->setParameter('filter', '%'.$filter.'%');
         }
 
-        $qb->addOrderBy('player.id');
+        $qb->addOrderBy('players.id');
         return $qb;
     }
 }
