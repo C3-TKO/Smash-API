@@ -21,7 +21,11 @@ class TeamControllerTest extends ApiTestCase
     {
         $this->createPlayers(['ACME', 'INC.']);
 
-        $this->createTeam(1, 2);
+        $em = $this->getEntityManager();
+        $playerA = $em->getRepository('AppBundle:Player')->findOneById(1);
+        $playerB = $em->getRepository('AppBundle:Player')->findOneById(2);
+
+        $this->createTeam($playerA, $playerB);
 
         $response = $this->client->get('/api/teams');
 
