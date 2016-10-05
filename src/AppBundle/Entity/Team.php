@@ -9,7 +9,7 @@ use AppBundle\Entity\Player;
  * Teams
  *
  * @ORM\Table(name="teams", uniqueConstraints={@ORM\UniqueConstraint(name="team_combination", columns={"id_player_a", "id_player_b"})}, indexes={@ORM\Index(name="IDX_team_id_2_player_a_id", columns={"id_player_a"}), @ORM\Index(name="IDX_team_id_2_player_b_id", columns={"id_player_b"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\TeamRepository")
  */
 class Team
 {
