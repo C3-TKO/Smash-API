@@ -49,4 +49,24 @@ class TeamController extends BaseController
 
         return $response;
     }
+
+
+    /**
+     * @Route("/api/teams", name="get_teams")
+     * @Method("GET")
+     */
+    public function getCollectionAction(Request $request)
+    {
+        $filter = $request->query->get('filter');
+
+        $qb = $this->getDoctrine()
+            ->getRepository('AppBundle:Team')
+            ->findAllQueryBuilder($filter);
+
+        $paginatedCollection = $this->get('pagination_factory')
+            ->createCollection($qb, $request, 'get_teams');
+
+        $response = $this->createApiResponse($paginatedCollection);
+        return $response;
+    }
 }
