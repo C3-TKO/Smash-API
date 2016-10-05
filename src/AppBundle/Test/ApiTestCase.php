@@ -3,6 +3,7 @@
 namespace AppBundle\Test;
 
 use AppBundle\Entity\Player;
+use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
@@ -325,7 +326,7 @@ class ApiTestCase extends KernelTestCase
      */
     protected function createTeam($idPlayerA, $idPlayerB)
     {
-        $team = new Player();
+        $team = new Team();
         $team->setIdPlayerA($idPlayerA);
         $team->setIdPlayerB($idPlayerB);
 
