@@ -36,6 +36,7 @@ class TeamController extends BaseController
         $em->flush();
 
         /*
+         * TODO: Uncomment when /api/teams/{id} is implemented
         $teamUrl = $this->generateUrl(
             'get_team',
             ['id' => $team->getId()]

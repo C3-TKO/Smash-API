@@ -23,7 +23,6 @@ class PlayerControllerTest extends ApiTestCase
             'name' => 'ACME'
         );
 
-        // 1) Create a programmer resource
         $response = $this->client->post('/api/players', [
             'body' => json_encode($data),
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
