@@ -111,9 +111,16 @@ class ApiTestCase extends KernelTestCase
 
     private function purgeDatabase()
     {
-        $purger = new ORMPurger($this->getService('doctrine')->getManager());
-        $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
-        $purger->purge();
+        $em = $this->getEntityManager();
+        $connection = $em->getConnection();
+        try {
+            $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 0');
+            $purger = new ORMPurger($this->getService('doctrine')->getManager());
+            $purger->setPurgeMode(ORMPurger::PURGE_MODE_TRUNCATE);
+            $purger->purge();
+        } finally {
+            $connection->executeQuery('SET FOREIGN_KEY_CHECKS = 1');
+        }
     }
 
     protected function getService($id)
