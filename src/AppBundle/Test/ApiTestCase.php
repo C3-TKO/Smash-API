@@ -320,6 +320,20 @@ class ApiTestCase extends KernelTestCase
     }
 
     /**
+     * @param int $idPlayerA
+     * @param int $idPlayerB
+     */
+    protected function createTeam($idPlayerA, $idPlayerB)
+    {
+        $team = new Player();
+        $team->setIdPlayerA($idPlayerA);
+        $team->setIdPlayerB($idPlayerB);
+
+        $this->getEntityManager()->persist($team);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
      * Call this when you want to compare URLs in a test
      *
      * (since the returned URL's will have /app_test.php in front)

@@ -20,7 +20,16 @@ use AppBundle\Annotation\Link;
 class Player
 {
     /**
-     * @var boolean
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string", length=30, nullable=false)
+     *
+     * @Assert\NotBlank(message="A player must have a name - except for Jaqen H'ghar - who is actually No one")
+     */
+    private $name;
+
+    /**
+     * @var integer
      *
      * @ORM\Column(name="id", type="smallint")
      * @ORM\Id
@@ -28,13 +37,6 @@ class Player
      */
     private $id;
 
-    /**
-     * @var string
-     * @ORM\Column(name="name", type="string", length=30, nullable=false)
-     *
-     * @Assert\NotBlank(message="A player must have a name - except for Jaqen H'ghar - who is actually No one")
-     */
-    private $name;
 
 
     /**
@@ -64,7 +66,7 @@ class Player
     /**
      * Get id
      *
-     * @return boolean
+     * @return integer
      */
     public function getId()
     {
