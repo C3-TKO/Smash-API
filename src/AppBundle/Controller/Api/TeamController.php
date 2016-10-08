@@ -42,7 +42,8 @@ class TeamController extends BaseController
             ['id' => $team->getId()]
         );*/
 
-        $teamUrl = 'api/teams/' . $team->getId();
+
+        $teamUrl = '/api/teams/' . $team->getId();
 
         // Response handling
         $response = $this->createApiResponse($team, Response::HTTP_CREATED);
