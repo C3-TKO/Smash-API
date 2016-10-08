@@ -4,12 +4,14 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Player;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Teams
  *
  * @ORM\Table(name="teams", uniqueConstraints={@ORM\UniqueConstraint(name="team_combination", columns={"id_player_a", "id_player_b"})}, indexes={@ORM\Index(name="IDX_team_id_2_player_a_id", columns={"id_player_a"}), @ORM\Index(name="IDX_team_id_2_player_b_id", columns={"id_player_b"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TeamRepository")
+ * @Serializer\ExclusionPolicy("all")
  */
 class Team
 {
@@ -17,6 +19,7 @@ class Team
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=45, nullable=true)
+     * @Serializer\Expose()
      */
     private $name;
 
@@ -26,6 +29,7 @@ class Team
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Serializer\Expose()
      */
     private $id;
 
