@@ -2,6 +2,7 @@
 
 namespace AppBundle\Form;
 
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,8 +16,8 @@ class TeamType extends AbstractType
     {
         $builder
             ->add('id', IntegerType::class, ['disabled' => $options['is_edit']])
-            ->add('id_player_a', new PlayerType())
-            ->add('id_player_b', new PlayerType())
+            ->add('id_player_a', EntityType::class, ['class' => 'AppBundle:Player'])
+            ->add('id_player_b', EntityType::class, ['class' => 'AppBundle:Player'])
             ->add('name', TextType::class);
     }
 
