@@ -18,7 +18,7 @@ class TeamType extends AbstractType
             ->add('id', IntegerType::class, ['disabled' => $options['is_edit']])
             ->add('id_player_a', EntityType::class, ['class' => 'AppBundle:Player'])
             ->add('id_player_b', EntityType::class, ['class' => 'AppBundle:Player'])
-            ->add('name', TextType::class);
+            ->add('name', TextType::class, ['required' => false, 'empty_data'  => '']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
