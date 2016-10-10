@@ -16,8 +16,8 @@ class TeamType extends AbstractType
     {
         $builder
             ->add('id', IntegerType::class, ['disabled' => $options['is_edit']])
-            ->add('id_player_a', EntityType::class, ['class' => 'AppBundle:Player'])
-            ->add('id_player_b', EntityType::class, ['class' => 'AppBundle:Player'])
+            ->add('id_player_a', EntityType::class, ['class' => 'AppBundle:Player', 'property_path' => 'player_a'])
+            ->add('id_player_b', EntityType::class, ['class' => 'AppBundle:Player', 'property_path' => 'player_b'])
             ->add('name', TextType::class, ['required' => false, 'empty_data'  => '']);
     }
 

@@ -328,14 +328,14 @@ class ApiTestCase extends KernelTestCase
     }
 
     /**
-     * @param int $idPlayerA
-     * @param int $idPlayerB
+     * @param Player $playerA
+     * @param Player $playerB
      */
-    protected function createTeam($idPlayerA, $idPlayerB)
+    protected function createTeam(Player $playerA, Player $playerB)
     {
         $team = new Team();
-        $team->setIdPlayerA($idPlayerA);
-        $team->setIdPlayerB($idPlayerB);
+        $team->setPlayerA($playerA);
+        $team->setPlayerB($playerB);
 
         $this->getEntityManager()->persist($team);
         $this->getEntityManager()->flush();

@@ -41,7 +41,7 @@ class Team
      *   @ORM\JoinColumn(name="id_player_b", referencedColumnName="id")
      * })
      */
-    private $idPlayerB;
+    private $playerB;
 
     /**
      * @var Player
@@ -51,7 +51,7 @@ class Team
      *   @ORM\JoinColumn(name="id_player_a", referencedColumnName="id")
      * })
      */
-    private $idPlayerA;
+    private $playerA;
 
 
 
@@ -60,7 +60,7 @@ class Team
      *
      * @param string $name
      *
-     * @return Teams
+     * @return Team
      */
     public function setName($name)
     {
@@ -90,39 +90,39 @@ class Team
     }
 
     /**
-     * Set idPlayerB
+     * Set playerB
      *
-     * @param Player $idPlayerB
+     * @param Player $playerB
      *
-     * @return Teams
+     * @return Team
      */
-    public function setIdPlayerB(Player $idPlayerB = null)
+    public function setPlayerB(Player $playerB = null)
     {
-        $this->idPlayerB = $idPlayerB;
+        $this->playerB = $playerB;
 
         return $this;
     }
 
     /**
-     * Get idPlayerB
+     * Get playerB
      *
      * @return Player
      */
-    public function getIdPlayerB()
+    public function getPlayerB()
     {
-        return $this->idPlayerB;
+        return $this->playerB;
     }
 
     /**
-     * Set idPlayerA
+     * Set playerA
      *
-     * @param Player $idPlayerA
+     * @param Player $playerA
      *
      * @return Teams
      */
-    public function setIdPlayerA(Player $idPlayerA = null)
+    public function setPlayerA(Player $playerA = null)
     {
-        $this->idPlayerA = $idPlayerA;
+        $this->playerA = $playerA;
 
         return $this;
     }
@@ -132,8 +132,24 @@ class Team
      *
      * @return Player
      */
-    public function getIdPlayerA()
+    public function getPlayerA()
     {
-        return $this->idPlayerA;
+        return $this->playerA;
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("id_player_a")
+     */
+    public function getIdPlayerA() {
+        return $this->playerA->getId();
+    }
+
+    /**
+     * @Serializer\VirtualProperty()
+     * @Serializer\SerializedName("id_player_b")
+     */
+    public function getIdPlayerB() {
+        return $this->playerB->getId();
     }
 }
