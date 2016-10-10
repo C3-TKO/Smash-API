@@ -23,6 +23,7 @@ class TeamController extends BaseController
     {
         // Input validation and handling
         $team = new Team();
+
         $form = $this->createForm('AppBundle\Form\TeamType', $team);
         $this->processForm($request, $form);
 

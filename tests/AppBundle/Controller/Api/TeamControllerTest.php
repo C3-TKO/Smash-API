@@ -66,9 +66,39 @@ class TeamControllerTest extends ApiTestCase
         $this->asserter()->assertResponsePropertyEquals($response, 'id_player_b', 2);
         $this->asserter()->assertResponsePropertyEquals($response, 'name', '');
 
-        // Only one player should be in database
+        // Only one team should be in database
         $em = $this->getEntityManager();
         $teams = $em->getRepository('AppBundle:Team')->findAll();
         $this->assertEquals(1, count($teams));
+    }
+
+    /**
+     * @test
+     */
+    public function postInvalidTeamShouldRespindWithError()
+    {
+        $this->createPlayers(['ACME', 'INC.']);
+
+        $data = array(
+            'id_player_a' => 'Invalid_Id', // ACME
+            'id_player_b' => 'Invalid_Id'
+        );
+
+        $response = $this->client->post('/api/teams', [
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
+
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertyExists($response, 'errors.id_player_a');
+        $this->asserter()->assertResponsePropertyExists($response, 'errors.id_player_b');
+        $this->asserter()->assertResponsePropertyEquals($response, 'errors.id_player_a[0]', 'This value is not valid.');
+        $this->asserter()->assertResponsePropertyEquals($response, 'errors.id_player_b[0]', 'This value is not valid.');
+        $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
+
+        // No team should be in database
+        $em = $this->getEntityManager();
+        $teams = $em->getRepository('AppBundle:Team')->findAll();
+        $this->assertEquals(0, count($teams));
     }
 }
