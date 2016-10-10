@@ -5,6 +5,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use AppBundle\Entity\Player;
 use JMS\Serializer\Annotation as Serializer;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Teams
@@ -12,6 +13,20 @@ use JMS\Serializer\Annotation as Serializer;
  * @ORM\Table(name="teams", uniqueConstraints={@ORM\UniqueConstraint(name="team_combination", columns={"id_player_a", "id_player_b"})}, indexes={@ORM\Index(name="IDX_team_id_2_player_a_id", columns={"id_player_a"}), @ORM\Index(name="IDX_team_id_2_player_b_id", columns={"id_player_b"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TeamRepository")
  * @Serializer\ExclusionPolicy("all")
+ * @Hateoas\Relation(
+ *     "player_a",
+ *     href=@Hateoas\Route(
+ *          "get_player",
+ *          parameters={"id"= "expr(object.getIdPlayerA())"}
+ *     )
+ * )
+ * @Hateoas\Relation(
+ *     "player_b",
+ *     href=@Hateoas\Route(
+ *          "get_player",
+ *          parameters={"id"= "expr(object.getIdPlayerB())"}
+ *     )
+ * )
  */
 class Team
 {

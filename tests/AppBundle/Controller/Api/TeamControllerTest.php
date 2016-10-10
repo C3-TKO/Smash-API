@@ -59,7 +59,8 @@ class TeamControllerTest extends ApiTestCase
             'id',
             'id_player_a',
             'id_player_b',
-            'name'
+            'name',
+            '_links'
         ));
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_player_a', 1);
