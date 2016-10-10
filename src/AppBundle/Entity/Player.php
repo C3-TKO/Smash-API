@@ -5,16 +5,19 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Annotation\Link;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Player
  *
  * @ORM\Table(name="players", indexes={@ORM\Index(name="name", columns={"name"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PlayerRepository")
- * @Link(
- *  "self",
- *  route = "get_player",
- *  params = { "id": "object.getId()" }
+ * @Hateoas\Relation(
+ *     "self",
+ *     href=@Hateoas\Route(
+ *          "get_player",
+ *          parameters={"id"= "expr(object.getId())"}
+ *     )
  * )
  */
 class Player
