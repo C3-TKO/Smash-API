@@ -305,6 +305,13 @@ definitions:
         description: The name of a team
       _links:
         $ref: '#/definitions/HAL'
+      _embedded:
+        type: object
+        properties:
+          player_a:
+            $ref: '#/definitions/Player'
+          player_b:
+            $ref: '#/definitions/Player'
 
   PaginationLinks:
     type: object
