@@ -303,6 +303,8 @@ definitions:
       name:
         type: string
         description: The name of a team
+      _links:
+        $ref: '#/definitions/HAL'
 
   PaginationLinks:
     type: object
