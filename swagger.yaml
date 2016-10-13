@@ -256,6 +256,17 @@ definitions:
       name:
         type: string
         description: Name of a player.
+      _links:
+        $ref: '#/definitions/HAL'
+
+  HAL:
+    properties:
+      self:
+        type: object
+        properties:
+          href:
+            type: string
+            format: url
 
   NewTeam:
     type: object
