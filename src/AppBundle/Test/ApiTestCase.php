@@ -149,7 +149,7 @@ class ApiTestCase extends KernelTestCase
 
         $contentType = $response->getHeader('Content-Type');
         $contentType = $contentType[0];
-        if ($contentType == 'application/json' || strpos($contentType, '+json') !== false) {
+        if ($contentType === 'application/json' || strpos($contentType, '+json') !== false) {
             $data = json_decode($body);
             if ($data === null) {
                 // invalid JSON!

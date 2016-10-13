@@ -70,7 +70,7 @@ class BaseController extends Controller
      * Creates an api response
      * - Serializes the payload in $data into json
      * - Defaults to HTTP OK (200) if not specified otherwise
-     * - Sets the application/json Content-Type
+     * - Sets the application/hal+json Content-Type
      *
      * @param $data             Payload to be encoded into JSON
      * @param int $statusCode   A valid HTTP response code
@@ -80,7 +80,7 @@ class BaseController extends Controller
     {
         $json = $this->serialize($data);
         return new Response($json, $statusCode, array(
-            'Content-Type' => 'application/json'
+            'Content-Type' => 'application/hal+json'
         ));
     }
 

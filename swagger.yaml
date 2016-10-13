@@ -16,7 +16,7 @@ securityDefinitions:
 consumes:
   - application/json
 produces:
-  - application/json
+  - application/hal+json
   - application/problem+json
 
 paths:

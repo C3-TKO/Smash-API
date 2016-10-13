@@ -29,7 +29,7 @@ class PlayerControllerTest extends ApiTestCase
         ]);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
         $this->assertStringEndsWith('/api/players/1', $response->getHeader('Location')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
@@ -57,7 +57,6 @@ class PlayerControllerTest extends ApiTestCase
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
         $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
-        //$this->assertEquals('application/json', $response->getHeader('Content-Type'));
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'type',
             'title',
@@ -83,7 +82,7 @@ class PlayerControllerTest extends ApiTestCase
         $response = $this->client->get('/api/players/1');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'
@@ -103,7 +102,7 @@ class PlayerControllerTest extends ApiTestCase
         $response = $this->client->get('/api/players');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertyIsArray($response, 'items');
         $this->asserter()->assertResponsePropertyCount($response, 'items', 2);
     }
@@ -126,7 +125,7 @@ class PlayerControllerTest extends ApiTestCase
         ]);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'name'

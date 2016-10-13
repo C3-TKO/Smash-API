@@ -15,6 +15,7 @@ class TokenControllerTest extends ApiTestCase
         ]);
 
         $this->assertEquals(200, $response->getStatusCode());
+        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
 
         $this->asserter()->assertResponsePropertyExists(
             $response,

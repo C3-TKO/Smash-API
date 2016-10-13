@@ -30,7 +30,7 @@ class TeamControllerTest extends ApiTestCase
         $response = $this->client->get('/api/teams');
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
         $this->asserter()->assertResponsePropertyIsArray($response, 'items');
         $this->asserter()->assertResponsePropertyCount($response, 'items', 1);
     }
@@ -53,7 +53,7 @@ class TeamControllerTest extends ApiTestCase
         ]);
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
-        $this->assertEquals('application/json', $response->getHeader('Content-Type')[0]);
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
         $this->assertStringEndsWith('/api/teams/1', $response->getHeader('Location')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
