@@ -18,14 +18,16 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *     href=@Hateoas\Route(
  *          "get_player",
  *          parameters={"id"= "expr(object.getIdPlayerA())"}
- *     )
+ *     ),
+ *     embedded = "expr(object.getPlayerA())"
  * )
  * @Hateoas\Relation(
  *     "player_b",
  *     href=@Hateoas\Route(
  *          "get_player",
  *          parameters={"id"= "expr(object.getIdPlayerB())"}
- *     )
+ *     ),
+ *     embedded = "expr(object.getPlayerB())"
  * )
  */
 class Team
