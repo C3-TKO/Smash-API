@@ -109,6 +109,8 @@ paths:
           description: Succesful response
         400:
           $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
         404:
           $ref: '#/responses/404'
     delete:
@@ -119,11 +121,13 @@ paths:
           in: path
           type: number
           format: integer
-          description: ID of the player
+          description: Id of the player
           required: true
       responses:
         204:
           $ref: '#/responses/204'
+        401:
+          $ref: '#/responses/401'
 
   /teams:
     get:
