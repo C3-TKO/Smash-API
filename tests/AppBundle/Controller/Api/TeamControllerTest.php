@@ -4,6 +4,7 @@ namespace AppBundle\Tests\ControllerAPI;
 
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Test\ApiTestCase;
+use Psr\Http\Message\ResponseInterface;
 
 class TeamControllerTest extends ApiTestCase
 {
@@ -55,14 +56,8 @@ class TeamControllerTest extends ApiTestCase
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
         $this->assertStringEndsWith('/api/teams/1', $response->getHeader('Location')[0]);
-        $this->asserter()->assertResponsePropertiesExist($response, array(
-            'id',
-            'id_player_a',
-            'id_player_b',
-            'name',
-            '_links.player_a.href',
-            '_links.player_b.href'
-        ));
+        $this->assertTeamModelSpecifictaion($response);
+
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_player_a', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_player_b', 2);
@@ -102,5 +97,41 @@ class TeamControllerTest extends ApiTestCase
         $em = $this->getEntityManager();
         $teams = $em->getRepository('AppBundle:Team')->findAll();
         $this->assertEquals(0, count($teams));
+    }
+
+    /**
+     * @test
+     */
+    function getTeamByIdShouldReturnAValidTeam()
+    {
+        $this->createPlayers(['ACME', 'INC.']);
+
+        $em = $this->getEntityManager();
+        $playerA = $em->getRepository('AppBundle:Player')->findOneById(1);
+        $playerB = $em->getRepository('AppBundle:Player')->findOneById(2);
+
+        $this->createTeam($playerA, $playerB);
+
+        $response = $this->client->get('/api/teams/1');
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
+        $this->assertTeamModelSpecifictaion($response);
+
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_player_a', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_player_b', 2);
+        $this->asserter()->assertResponsePropertyEquals($response, 'name', '');
+    }
+
+    private function assertTeamModelSpecifictaion(ResponseInterface $response) {
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'id',
+            'id_player_a',
+            'id_player_b',
+            'name',
+            '_links.player_a.href',
+            '_links.player_b.href'
+        ));
     }
 }
