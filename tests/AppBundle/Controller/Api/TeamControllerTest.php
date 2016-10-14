@@ -79,7 +79,7 @@ class TeamControllerTest extends ApiTestCase
         $this->createPlayers(['ACME', 'INC.']);
 
         $data = array(
-            'id_player_a' => 'Invalid_Id', // ACME
+            'id_player_a' => 'Invalid_Id',
             'id_player_b' => 'Invalid_Id'
         );
 
