@@ -39,7 +39,7 @@ class TeamControllerTest extends ApiTestCase
     /**
      * @test
      */
-    function getTeamByIdShouldReturnAValidTeam()
+    public function getTeamByIdShouldReturnAValidTeam()
     {
         $this->createPlayers(['ACME', 'INC.']);
 
