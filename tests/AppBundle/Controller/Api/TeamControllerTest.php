@@ -45,7 +45,8 @@ class TeamControllerTest extends ApiTestCase
 
         $data = array(
             'id_player_a' => 1, // ACME
-            'id_player_b' => 2  // INC
+            'id_player_b' => 2,  // INC,
+            'name'        => 'TestTeamName'
         );
 
         $response = $this->client->post('/api/teams', [
@@ -61,7 +62,7 @@ class TeamControllerTest extends ApiTestCase
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_player_a', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_player_b', 2);
-        $this->asserter()->assertResponsePropertyEquals($response, 'name', '');
+        $this->asserter()->assertResponsePropertyEquals($response, 'name', 'TestTeamName');
         $this->asserter()->assertResponsePropertyEquals($response, '_links.self.href', $this->adjustUri('/api/teams/1'));
 
         // Only one team should be in database
