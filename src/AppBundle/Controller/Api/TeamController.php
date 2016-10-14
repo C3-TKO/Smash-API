@@ -72,4 +72,24 @@ class TeamController extends BaseController
         $response = $this->createApiResponse($paginatedCollection);
         return $response;
     }
+
+    /**
+     * @Route("/api/teams/{id}", name="get_team")
+     * @Method("GET")
+     */
+    public function getTeamAction($id)
+    {
+        $team = $this->getDoctrine()
+            ->getRepository('AppBundle:Team')
+            ->findOneById($id);
+
+        if (!$team) {
+            throw $this->createNotFoundException(sprintf(
+                'No team found with id %s',
+                $id
+            ));
+        }
+
+        return $this->createApiResponse($team);
+    }
 }
