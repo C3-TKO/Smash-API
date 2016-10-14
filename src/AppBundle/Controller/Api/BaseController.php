@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Form\Form;
+use JMS\Serializer\SerializationContext;
 
 class BaseController extends Controller
 {
@@ -92,7 +93,10 @@ class BaseController extends Controller
      */
     protected function serialize($data)
     {
+        $context = new SerializationContext();
+        $context->setSerializeNull(true);
+
         return $this->container->get('jms_serializer')
-            ->serialize($data, 'json');
+            ->serialize($data, 'json', $context);
     }
 }
