@@ -214,9 +214,7 @@ EOF;
         $response = $this->client->get('/api/players/404');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
         $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
-        $this->asserter()->assertResponsePropertyEquals($response, 'type', 'about:blank');
-        $this->asserter()->assertResponsePropertyEquals($response, 'title', 'Not Found');
-        $this->asserter()->assertResponsePropertyEquals($response, 'detail', 'No player found with id 404');
+        $this->assertAccessToNotExistingEntity($response, 'player', 404);
     }
 
     /**
