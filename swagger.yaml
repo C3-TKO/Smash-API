@@ -55,7 +55,7 @@ paths:
                 $ref: '#/definitions/PaginationLinks'
     post:
       description: |
-        Creates a new `Player` model
+        Creates a new `Player` model and updates the list of teams with all new team combinations with this new player
       parameters:
         - name: player
           in: body
@@ -115,7 +115,7 @@ paths:
           $ref: '#/responses/404'
     delete:
       description: |
-        Deletes a `Player` model and all teams that player is a part of
+        Deletes a `Player` model and all teams that player is a part of.
       parameters:
         - name: id
           in: path
@@ -159,7 +159,7 @@ paths:
   /teams/{id}:
     get:
       description: |
-        Gets a specific `Team` object identified by its id
+        Gets a specific `Team` object identified by its id.
       parameters:
         - name: id
           in: path
@@ -177,7 +177,7 @@ paths:
   /teams/{id}/name:
     put:
       description: |
-        Updates the name of a specific `Team` model identified by its id
+        Updates the name of a specific `Team` model identified by its id.
       parameters:
         - name: id
           in: path
