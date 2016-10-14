@@ -64,9 +64,9 @@ class TeamControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function putPlayerShouldUpdatePlayer()
+    public function putNameShouldUpdateTeam()
     {
-        $this->createPlayers(['ACME', 'INC.', 'GOVNO']);
+        $this->createPlayers(['ACME', 'INC.']);
 
         $em = $this->getEntityManager();
         $playerA = $em->getRepository('AppBundle:Player')->findOneById(1);
@@ -75,18 +75,17 @@ class TeamControllerTest extends ApiTestCase
         $this->createTeam($playerA, $playerB);
 
         $data = array(
-            'id_player_a' => 2, // INC.
-            'id_player_b' => 3, // GOVNO
             'name'        => 'TestTeamNameUpdated'
         );
 
-        $response = $this->client->put('/api/teams/1', [
+        $response = $this->client->put('/api/teams/1/name', [
             'body' => json_encode($data),
             'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
         ]);
 
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
         $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
+        $this->assertStringEndsWith('/api/players/1', $response->getHeader('Location')[0]);
         $this->assertTeamModelSpecifictaion($response);
 
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
