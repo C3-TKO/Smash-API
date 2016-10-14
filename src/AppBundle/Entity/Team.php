@@ -14,6 +14,13 @@ use Hateoas\Configuration\Annotation as Hateoas;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\TeamRepository")
  * @Serializer\ExclusionPolicy("all")
  * @Hateoas\Relation(
+ *     "self",
+ *     href=@Hateoas\Route(
+ *          "get_team",
+ *          parameters={"id"= "expr(object.getId())"}
+ *     )
+ * )
+ * @Hateoas\Relation(
  *     "player_a",
  *     href=@Hateoas\Route(
  *          "get_player",
