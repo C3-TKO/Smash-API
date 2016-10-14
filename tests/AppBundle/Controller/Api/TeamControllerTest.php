@@ -136,19 +136,4 @@ class TeamControllerTest extends ApiTestCase
             '_links.player_b.href'
         ));
     }
-
-    private function assertAccessToNotExistingEntity(ResponseInterface $response, $entityName, $id)
-    {
-        $this->asserter()->assertResponsePropertiesExist($response, array(
-            'detail',
-            'status',
-            'type',
-            'title'
-        ));
-
-        $this->asserter()->assertResponsePropertyEquals($response, 'detail', sprintf('No %s found with id %u', $entityName, $id));
-        $this->asserter()->assertResponsePropertyEquals($response, 'status', '404');
-        $this->asserter()->assertResponsePropertyEquals($response, 'type', 'about:blank');
-        $this->asserter()->assertResponsePropertyEquals($response, 'title', 'Not Found');
-    }
 }
