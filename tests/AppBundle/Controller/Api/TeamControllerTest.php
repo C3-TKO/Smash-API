@@ -74,9 +74,7 @@ class TeamControllerTest extends ApiTestCase
 
         $this->createTeam($playerA, $playerB);
 
-        $data = array(
-            'name'        => 'TestTeamNameUpdated'
-        );
+        $data = ['name' => 'TestTeamNameUpdated'];
 
         $response = $this->client->put('/api/teams/1/name', [
             'body' => json_encode($data),
