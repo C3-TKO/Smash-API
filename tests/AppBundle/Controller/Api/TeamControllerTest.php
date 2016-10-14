@@ -126,6 +126,41 @@ class TeamControllerTest extends ApiTestCase
         $this->asserter()->assertResponsePropertyEquals($response, 'name', '');
     }
 
+    /**
+     * @test
+     */
+    public function putPlayerShouldUpdatePlayer()
+    {
+        $this->createPlayers(['ACME', 'INC.', 'GOVNO']);
+
+        $em = $this->getEntityManager();
+        $playerA = $em->getRepository('AppBundle:Player')->findOneById(1);
+        $playerB = $em->getRepository('AppBundle:Player')->findOneById(2);
+
+        $this->createTeam($playerA, $playerB);
+
+        $data = array(
+            'id_player_a' => 2, // INC.
+            'id_player_b' => 3, // GOVNO
+            'name'        => 'TestTeamNameUpdated'
+        );
+
+        $response = $this->client->put('/api/teams/1', [
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
+        $this->assertTeamModelSpecifictaion($response);
+
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_player_a', 2);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_player_b', 3);
+        $this->asserter()->assertResponsePropertyEquals($response, 'name', 'TestTeamNameUpdated');
+        $this->asserter()->assertResponsePropertyEquals($response, '_links.self.href', $this->adjustUri('/api/teams/1'));
+    }
+
     private function assertTeamModelSpecifictaion(ResponseInterface $response) {
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
