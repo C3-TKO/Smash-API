@@ -75,6 +75,30 @@ class PlayerControllerTest extends ApiTestCase
     /**
      * @test
      */
+    public function postValidPlayerShouldCreateNewTeamEntities()
+    {
+        $this->createPlayers(['ACME']);
+
+        $data = array(
+            'name' => 'INC'
+        );
+
+        // Posting a player should trigger the creation of all new teams that player can be part of - No response check
+        // is needed here as this will be covered by the preceding tests
+        $this->client->post('/api/players', [
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
+
+        // Only one team should be in database
+        $em = $this->getEntityManager();
+        $teams = $em->getRepository('AppBundle:Team')->findAll();
+        $this->assertEquals(1, count($teams));
+    }
+
+    /**
+     * @test
+     */
     public function getPlayerShouldRetrieveASinglePlayer()
     {
         $this->createPlayers(['ACME']);
