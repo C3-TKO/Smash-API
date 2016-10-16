@@ -283,6 +283,21 @@ definitions:
           player_b:
             $ref: '#/definitions/Player'
 
+  Round:
+    type: object
+    description: A `Round` consists of several `Game` entities belonging to one specific date
+    properties:
+      id:
+        type: number
+        format: integer
+        description: Unique identifier of a round
+      date:
+        type: string
+        format: full-date
+        description: Date of the round
+      _links:
+        $ref: '#/definitions/HAL'
+
   PaginationLinks:
     type: object
     properties:
