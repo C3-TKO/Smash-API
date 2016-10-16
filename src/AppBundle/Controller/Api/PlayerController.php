@@ -4,6 +4,8 @@ namespace AppBundle\Controller\Api;
 
 use AppBundle\Api\ApiProblem;
 use AppBundle\Api\ApiProblemException;
+use AppBundle\Entity\Team;
+use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +34,23 @@ class PlayerController extends BaseController
 
         // New entity persistence
         $em = $this->getDoctrine()->getManager();
-        $em->persist($player);
-        $em->flush();
+        $em->getConnection()->beginTransaction();
+
+        // Try and make the transaction
+        try {
+            $em->persist($player);
+            $em->flush();
+
+            $this->createTeamsForNewPlayer($em, $player);
+
+
+            // Try and commit the transaction
+            $em->getConnection()->commit();
+        } catch (Exception $e) {
+            // Rollback the failed transaction attempt
+            $em->getConnection()->rollback();
+            throw $e;
+        }
 
         $playerUrl = $this->generateUrl(
             'get_player',
@@ -138,5 +155,30 @@ class PlayerController extends BaseController
         // Will always return a HTTP 204 as it doesn't matter if the player existed or not. What matters is idempotancy!
         // Requesting an idempotant endpoint prescribes that the repsonse must always be the same
         return new Response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * Creates all possible team combination with the new player
+     *
+     * @param EntityManager $em
+     * @param Player $newPlayer
+     */
+    private function createTeamsForNewPlayer(EntityManager $em, Player $newPlayer)
+    {
+        $players = $em->getRepository('AppBundle:Player')->findAll();
+
+        foreach($players as $existingPlayer) {
+            if($existingPlayer->getId() === $newPlayer->getId())
+            {
+                continue;
+            }
+
+            $team = new Team();
+            $team->setPlayerA($existingPlayer);
+            $team->setPlayerB($newPlayer);
+            $em->persist($team);
+        }
+
+        $em->flush();
     }
 }
