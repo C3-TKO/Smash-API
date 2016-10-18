@@ -341,11 +341,6 @@ definitions:
         description: Date of the round
       _links:
         $ref: '#/definitions/HAL'
-      _embedded:
-        type: object
-        properties:
-          round:
-            $ref: '#/definitions/Game'
 
   PaginationLinks:
     type: object
