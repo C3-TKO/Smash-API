@@ -204,6 +204,32 @@ paths:
           $ref: '#/responses/404'
 
   /rounds:
+    get:
+      description: |
+        Gets a collection of rounds
+      parameters:
+        - $ref: '#/parameters/pageNumber'
+        - $ref: '#/parameters/pageSize'
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                minItems: 0
+                maxItems: 100
+                uniqueItems: true
+                items:
+                  $ref: '#/definitions/Round'
+              total:
+                type: integer
+              count:
+                type: integer
+              _links:
+                $ref: '#/definitions/PaginationLinks'
+
     post:
       description: |
         Creates a new `Round` for the specified date
@@ -221,7 +247,64 @@ paths:
           $ref: '#/responses/400'
         401:
           $ref: '#/responses/401'
-
+  /rounds/{id}:
+    get:
+      description: |
+        Gets a specific `Round` object identified by its id.
+      parameters:
+        - name: id
+          in: path
+          type: number
+          format: integer
+          description: Id of the team
+          required: true
+      responses:
+        200:
+          description: Succesful response
+          schema:
+            $ref: '#/definitions/Round'
+        404:
+          $ref: '#/responses/404'
+    put:
+      description: |
+        Updates a specific `Round` model identified by its id
+      parameters:
+        - name: id
+          in: path
+          type: number
+          format: integer
+          description: Id of the round
+          required: true
+        - name: player
+          in: body
+          description: The round model to be updated
+          schema:
+            $ref: '#/definitions/Round'
+          required: true
+      responses:
+        200:
+          description: Succesful response
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+        404:
+          $ref: '#/responses/404'
+    delete:
+      description: |
+        Deletes a `Round` model.
+      parameters:
+        - name: id
+          in: path
+          type: number
+          format: integer
+          description: Id of the round
+          required: true
+      responses:
+        204:
+          $ref: '#/responses/204'
+        401:
+          $ref: '#/responses/401'
 
   /tokens:
     post:
