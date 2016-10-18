@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * Round
@@ -25,6 +26,7 @@ class Round
      * @var \DateTime
      *
      * @ORM\Column(name="date", type="date", nullable=true)
+     * @Serializer\Type("DateTime<'Y-m-d'>")
      */
     private $date;
 
