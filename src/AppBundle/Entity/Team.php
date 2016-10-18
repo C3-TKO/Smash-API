@@ -40,22 +40,22 @@ use Hateoas\Configuration\Annotation as Hateoas;
 class Team
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="smallint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @Serializer\Expose()
+     */
+    private $id;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=45, nullable=true)
      * @Serializer\Expose()
      */
     private $name;
-
-    /**
-     * @var integer
-     *
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     * @Serializer\Expose()
-     */
-    private $id;
 
     /**
      * @var Player
@@ -77,7 +77,15 @@ class Team
      */
     private $playerA;
 
-
+    /**
+     * Get id
+     *
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set name
@@ -101,16 +109,6 @@ class Team
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 
     /**

@@ -23,6 +23,15 @@ use Hateoas\Configuration\Annotation as Hateoas;
 class Player
 {
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="id", type="smallint", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="IDENTITY")
+     */
+    private $id;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="name", type="string", length=30, nullable=false)
@@ -31,16 +40,17 @@ class Player
      */
     private $name;
 
+
+
     /**
-     * @var integer
+     * Get id
      *
-     * @ORM\Column(name="id", type="smallint")
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
+     * @return integer
      */
-    private $id;
-
-
+    public function getId()
+    {
+        return $this->id;
+    }
 
     /**
      * Set name
@@ -64,15 +74,5 @@ class Player
     public function getName()
     {
         return $this->name;
-    }
-
-    /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return $this->id;
     }
 }
