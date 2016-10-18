@@ -283,6 +283,50 @@ definitions:
           player_b:
             $ref: '#/definitions/Player'
 
+  Game:
+    type: object
+    description: A `Game` describes the results of two competing `Team` entites. It belongs to a specific round
+    properties:
+      id:
+        type: number
+        format: integer
+        description: Unique identifier of a game
+      id_round:
+        type: number
+        format: integer
+        description: Unique identifier of the round that game belongs to
+      id_team_a:
+        type: number
+        format: integer
+        description: Unique identifier of the first of the two competing teams
+      id_team_b:
+        type: number
+        format: integer
+        description: Unique identifier of the second of the two competing teams
+      team_a_score:
+        type: number
+        format: integer
+        minimum: 0
+        maximum: 30
+        description: Final score of the first team
+      team_b_score:
+        type: number
+        format: integer
+        minimum: 0
+        maximum: 30
+        description: Final score of the second team
+      _links:
+        $ref: '#/definitions/HAL'
+      _embedded:
+        type: object
+        properties:
+          round:
+            $ref: '#/definitions/Round'
+          player_a:
+            $ref: '#/definitions/Player'
+          player_b:
+            $ref: '#/definitions/Player'
+
   Round:
     type: object
     description: A `Round` consists of several `Game` entities belonging to one specific date
@@ -297,6 +341,11 @@ definitions:
         description: Date of the round
       _links:
         $ref: '#/definitions/HAL'
+      _embedded:
+        type: object
+        properties:
+          round:
+            $ref: '#/definitions/Game'
 
   PaginationLinks:
     type: object
