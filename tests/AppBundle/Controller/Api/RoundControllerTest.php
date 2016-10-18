@@ -43,4 +43,34 @@ class RoundControllerTest extends ApiTestCase
         $players = $em->getRepository('AppBundle:Round')->findAll();
         $this->assertEquals(1, count($players));
     }
+
+    /**
+     * @test
+     */
+    public function postAnInvalidRoundShouldNotCreateANewPlayerEntity()
+    {
+        // Invalid because the mandatory attribute 'name' is invalid
+        $data = array(
+            'date' => 'INVALID'
+        );
+
+        $response = $this->client->post('/api/rounds', [
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
+        $this->assertEquals(Response::HTTP_BAD_REQUEST, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'type',
+            'title',
+            'errors'
+        ));
+        $this->asserter()->assertResponsePropertyExists($response, 'errors.date');
+        $this->asserter()->assertResponsePropertyEquals($response, 'errors.date[0]', 'This value is not valid.');
+        $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
+
+        // Only one player should be in database
+        $em = $this->getEntityManager();
+        $players = $em->getRepository('AppBundle:Round')->findAll();
+        $this->assertEmpty(count($players));
+    }
 }
