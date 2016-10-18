@@ -155,7 +155,6 @@ paths:
                 type: integer
               _links:
                 $ref: '#/definitions/PaginationLinks'
-
   /teams/{id}:
     get:
       description: |
@@ -203,6 +202,26 @@ paths:
           $ref: '#/responses/401'
         404:
           $ref: '#/responses/404'
+
+  /rounds:
+    post:
+      description: |
+        Creates a new `Round` for the specified date
+      parameters:
+        - name: round
+          in: body
+          description: Model of the to be created round
+          required: true
+          schema:
+            $ref: '#/definitions/NewRound'
+      responses:
+        201:
+          $ref: '#/responses/201'
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+
 
   /tokens:
     post:
@@ -327,6 +346,15 @@ definitions:
           player_b:
             $ref: '#/definitions/Player'
 
+  NewRound:
+    type: object
+    description: A `Round` consists of several `Game` entities belonging to one specific date
+    properties:
+      date:
+        type: string
+        format: date
+        description: Date of the round
+
   Round:
     type: object
     description: A `Round` consists of several `Game` entities belonging to one specific date
@@ -337,7 +365,7 @@ definitions:
         description: Unique identifier of a round
       date:
         type: string
-        format: full-date
+        format: date
         description: Date of the round
       _links:
         $ref: '#/definitions/HAL'
