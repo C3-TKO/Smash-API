@@ -2,8 +2,6 @@
 
 namespace AppBundle\Controller\Api;
 
-use AppBundle\Api\ApiProblem;
-use AppBundle\Api\ApiProblemException;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Symfony\Component\HttpFoundation\Request;

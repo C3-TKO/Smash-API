@@ -2,8 +2,6 @@
 
 namespace AppBundle\Controller\Api;
 
-use AppBundle\Api\ApiProblem;
-use AppBundle\Api\ApiProblemException;
 use AppBundle\Entity\Team;
 use Doctrine\ORM\EntityManager;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
