@@ -73,4 +73,23 @@ class RoundControllerTest extends ApiTestCase
         $players = $em->getRepository('AppBundle:Round')->findAll();
         $this->assertEmpty(count($players));
     }
+
+    /**
+     * @test
+     */
+    public function getRoundsShouldRespondWithACollectionOfAllRounds()
+    {
+        $this->createRounds([
+            '1980-04-30',
+            '1979-01-06',
+            '2013-10-03'
+        ]);
+
+        $response = $this->client->get('/api/rounds');
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
+        $this->asserter()->assertResponsePropertyIsArray($response, 'items');
+        $this->asserter()->assertResponsePropertyCount($response, 'items', 3);
+    }
 }

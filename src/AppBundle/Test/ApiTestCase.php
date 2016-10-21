@@ -5,6 +5,7 @@ namespace AppBundle\Test;
 use AppBundle\Entity\Player;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
+use AppBundle\Entity\Round;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -323,6 +324,20 @@ class ApiTestCase extends KernelTestCase
             $player->setName($name);
 
             $this->getEntityManager()->persist($player);
+            $this->getEntityManager()->flush();
+        }
+    }
+
+    /**
+     * @param array $dateStrings
+     */
+    protected function createRounds(array $dateStrings)
+    {
+        foreach($dateStrings as $dateString) {
+            $round = new Round();
+            $round->setDate(\DateTime::createFromFormat('Y-m-d', $dateString));
+
+            $this->getEntityManager()->persist($round);
             $this->getEntityManager()->flush();
         }
     }
