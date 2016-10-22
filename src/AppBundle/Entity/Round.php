@@ -9,7 +9,7 @@ use JMS\Serializer\Annotation as Serializer;
  * Round
  *
  * @ORM\Table(name="rounds", uniqueConstraints={@ORM\UniqueConstraint(name="date", columns={"date"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\RoundRepository")
  */
 class Round
 {

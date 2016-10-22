@@ -48,4 +48,23 @@ class RoundController extends BaseController
 
         return $response;
     }
+
+
+    /**
+     * @Route("/api/rounds", name="get_rounds")
+     * @Method("GET")
+     */
+    public function getCollectionAtion(Request $request) {
+        $filter = $request->query->get('filter');
+
+        $qb = $this->getDoctrine()
+            ->getRepository('AppBundle:Round')
+            ->findAllQueryBuilder($filter);
+
+        $paginatedCollection = $this->get('pagination_factory')
+            ->createCollection($qb, $request, 'get_rounds');
+
+        $response = $this->createApiResponse($paginatedCollection);
+        return $response;
+    }
 }
