@@ -44,7 +44,7 @@ class GameControllerTest extends ApiTestCase
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
-        $this->assertStringEndsWith('/api/rounds/1', $response->getHeader('Location')[0]);
+        $this->assertStringEndsWith('/api/games/1', $response->getHeader('Location')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'id_round',
@@ -56,7 +56,7 @@ class GameControllerTest extends ApiTestCase
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_round', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_team_a', 1);
-        $this->asserter()->assertResponsePropertyEquals($response, 'id_team_b', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_team_b', 2);
         $this->asserter()->assertResponsePropertyEquals($response, 'team_a_score', 21);
         $this->asserter()->assertResponsePropertyEquals($response, 'team_b_score', 19);
 

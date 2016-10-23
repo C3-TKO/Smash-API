@@ -3,6 +3,8 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Round;
 use AppBundle\Entity\Team;
 
@@ -27,6 +29,8 @@ class Game
      * @var integer
      *
      * @ORM\Column(name="team_a_score", type="smallint", nullable=false)
+     * @Assert\NotBlank(message="Team A must have scored points.")
+     * @Assert\Range(min=0,max=30)
      */
     private $teamAScore;
 
@@ -34,6 +38,8 @@ class Game
      * @var integer
      *
      * @ORM\Column(name="team_b_score", type="smallint", nullable=false)
+     * @Assert\NotBlank(message="Team B must have scored points.")
+     * @Assert\Range(min=0,max=30)
      */
     private $teamBScore;
 
