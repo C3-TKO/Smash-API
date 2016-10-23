@@ -44,7 +44,7 @@ class GameControllerTest extends ApiTestCase
 
         $this->assertEquals(Response::HTTP_CREATED, $response->getStatusCode());
         $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
-        $this->assertStringEndsWith('/api/rounds/1', $response->getHeader('Location')[0]);
+        $this->assertStringEndsWith('/api/games/1', $response->getHeader('Location')[0]);
         $this->asserter()->assertResponsePropertiesExist($response, array(
             'id',
             'id_round',
