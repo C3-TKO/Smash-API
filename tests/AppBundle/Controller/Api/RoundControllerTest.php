@@ -186,4 +186,36 @@ class RoundControllerTest extends ApiTestCase
         $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
         $this->assertAccessToNotExistingEntity($response, 'round', 404);
     }
+
+    /**
+     * @test
+     */
+    public function putRoundShouldUpdateRound()
+    {
+        $this->createPlayers(['1980-04-30']);
+
+        $data = array(
+            'id' => 1,
+            'name' => '1979-01-06'
+        );
+
+        $response = $this->client->put('/api/rounds/1', [
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'id',
+            'date'
+        ));
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'date', '1979-01-06');
+
+        // Only one round should be in database after update
+        $em = $this->getEntityManager();
+        $rounds = $em->getRepository('AppBundle:Round')->findAll();
+        $this->assertEquals(1, count($rounds));
+    }
 }
