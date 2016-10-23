@@ -349,7 +349,64 @@ paths:
           $ref: '#/responses/400'
         401:
           $ref: '#/responses/401'
-
+  /games/{id}:
+    get:
+      description: |
+        Gets a specific `Game` object identified by its id.
+      parameters:
+        - name: id
+          in: path
+          type: number
+          format: integer
+          description: Id of the game
+          required: true
+      responses:
+        200:
+          description: Succesful response
+          schema:
+            $ref: '#/definitions/Game'
+        404:
+          $ref: '#/responses/404'
+    put:
+      description: |
+        Updates a specific `Game` model identified by its id
+      parameters:
+        - name: id
+          in: path
+          type: number
+          format: integer
+          description: Id of the game
+          required: true
+        - name: player
+          in: body
+          description: The game model to be updated
+          schema:
+            $ref: '#/definitions/Game'
+          required: true
+      responses:
+        200:
+          description: Succesful response
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+        404:
+          $ref: '#/responses/404'
+    delete:
+      description: |
+        Deletes a `Game` model.
+      parameters:
+        - name: id
+          in: path
+          type: number
+          format: integer
+          description: Id of the game
+          required: true
+      responses:
+        204:
+          $ref: '#/responses/204'
+        401:
+          $ref: '#/responses/401'
 
   /tokens:
     post:
