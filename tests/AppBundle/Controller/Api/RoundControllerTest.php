@@ -218,4 +218,23 @@ class RoundControllerTest extends ApiTestCase
         $rounds = $em->getRepository('AppBundle:Round')->findAll();
         $this->assertEquals(1, count($rounds));
     }
+
+    /**
+     * @test
+     */
+    public function deleteRoundShouldDeleteARound()
+    {
+        $this->createRounds(['1980-04-30']);
+
+        $response = $this->client->delete('/api/rounds/1', [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
+
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+
+        // No more players should be in database
+        $em = $this->getEntityManager();
+        $rounds = $em->getRepository('AppBundle:Round')->findAll();
+        $this->assertEquals(0, count($rounds));
+    }
 }
