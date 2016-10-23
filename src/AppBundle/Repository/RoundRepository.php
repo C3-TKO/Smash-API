@@ -10,12 +10,17 @@ class RoundRepository extends EntityRepository
     {
         $qb = $this->createQueryBuilder('rounds');
 
+        /**
+         * @TODO: Implement a filter for a specific date
+         * @TODO: Implement a filter for rounds within two specific dates
+
         if ($filter) {
-            $qb->andWhere('rounds.name LIKE :filter')
+            $qb->andWhere('rounds.date LIKE :filter')
                 ->setParameter('filter', '%'.$filter.'%');
         }
+         */
 
-        $qb->addOrderBy('rounds.id');
+        $qb->addOrderBy('rounds.date');
         return $qb;
     }
 }

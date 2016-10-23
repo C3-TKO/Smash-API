@@ -92,4 +92,68 @@ class RoundControllerTest extends ApiTestCase
         $this->asserter()->assertResponsePropertyIsArray($response, 'items');
         $this->asserter()->assertResponsePropertyCount($response, 'items', 3);
     }
+
+    /**
+     * @test
+     */
+    public function testPlayerCollectionPagination()
+    {
+        $roundDates = [];
+        for ($i = 0; $i < 25; $i++) {
+            $roundDates[] = '2016-10-' . ($i + 1);
+        }
+
+        $this->createRounds($roundDates);
+
+        // page 1
+        $response = $this->client->get('/api/rounds?pageSize=10');
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertyEquals(
+            $response,
+            'items[5].id',
+            6
+        );
+        $this->asserter()->assertResponsePropertyEquals(
+            $response,
+            'items[5].date',
+            '2016-10-06'
+        );
+
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
+        $this->asserter()->assertResponsePropertyEquals($response, 'total', 25);
+        $this->asserter()->assertResponsePropertyExists($response, '_links.next');
+
+        // page 2
+        $nextLink = $this->asserter()->readResponseProperty($response, '_links.next');
+        $response = $this->client->get($nextLink);
+
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertyEquals(
+            $response,
+            'items[5].date',
+            '2016-10-16'
+        );
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 10);
+
+        // last page(3)
+        $lastLink = $this->asserter()->readResponseProperty($response, '_links.last');
+        $response = $this->client->get($lastLink);
+        $this->assertEquals(200, $response->getStatusCode());
+        $this->asserter()->assertResponsePropertyEquals(
+            $response,
+            'items[4].date',
+            '2016-10-25'
+        );
+        $this->asserter()->assertResponsePropertyEquals($response, 'count', 5);
+
+        // Just following the link for the previous page
+        $prevLink = $this->asserter()->readResponseProperty($response, '_links.prev');
+        $response = $this->client->get($prevLink);
+        $this->assertEquals(200, $response->getStatusCode());
+
+        // Just following the link for the first page
+        $firstLink = $this->asserter()->readResponseProperty($response, '_links.first');
+        $response = $this->client->get($firstLink);
+        $this->assertEquals(200, $response->getStatusCode());
+    }
 }
