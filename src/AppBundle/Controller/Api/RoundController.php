@@ -116,4 +116,26 @@ class RoundController extends BaseController
 
         return $this->createApiResponse($round);
     }
+
+    /**
+     * @Security("is_granted('ROLE_USER')")
+     * @Route("/api/rounds/{id}", name="delete_round")
+     * @Method("DELETE")
+     */
+    public function deleteAction($id)
+    {
+        $round = $this->getDoctrine()
+            ->getRepository('AppBundle:Round')
+            ->findOneById($id);
+
+        if ($round) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($round);
+            $em->flush();
+        }
+
+        // Will always return a HTTP 204 as it doesn't matter if the player existed or not. What matters is idempotancy!
+        // Requesting an idempotant endpoint prescribes that the repsonse must always be the same
+        return new Response(null, Response::HTTP_NO_CONTENT);
+    }
 }
