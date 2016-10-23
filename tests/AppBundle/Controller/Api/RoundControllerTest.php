@@ -192,11 +192,11 @@ class RoundControllerTest extends ApiTestCase
      */
     public function putRoundShouldUpdateRound()
     {
-        $this->createPlayers(['1980-04-30']);
+        $this->createRounds(['1980-04-30']);
 
         $data = array(
             'id' => 1,
-            'name' => '1979-01-06'
+            'date' => '1979-01-06'
         );
 
         $response = $this->client->put('/api/rounds/1', [

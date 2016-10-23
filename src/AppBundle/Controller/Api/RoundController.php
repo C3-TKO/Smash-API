@@ -84,4 +84,36 @@ class RoundController extends BaseController
 
         return $this->createApiResponse($round);
     }
+
+    /**
+     * @Security("is_granted('ROLE_USER')")
+     * @Route("/api/rounds/{id}", name="put_round")
+     * @Method("PUT")
+     */
+    public function updateAction($id, Request $request)
+    {
+        $round = $this->getDoctrine()
+            ->getRepository('AppBundle:Round')
+            ->findOneById($id);
+
+        if (!$round) {
+            throw $this->createNotFoundException(sprintf(
+                'No round found with id %s',
+                $id
+            ));
+        }
+
+        $form = $this->createForm('AppBundle\Form\UpdateRoundType', $round);
+        $this->processForm($request, $form);
+
+        if (!$form->isValid()) {
+            return $this->throwApiProblemValidationException($form);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($round);
+        $em->flush();
+
+        return $this->createApiResponse($round);
+    }
 }
