@@ -236,7 +236,7 @@ paths:
       parameters:
         - name: round
           in: body
-          description: Model of the to be created round
+          description: Model of the round to be created
           required: true
           schema:
             $ref: '#/definitions/NewRound'
@@ -305,6 +305,51 @@ paths:
           $ref: '#/responses/204'
         401:
           $ref: '#/responses/401'
+
+  /games:
+    get:
+      description: |
+        Gets a collection of games
+      parameters:
+        - $ref: '#/parameters/pageNumber'
+        - $ref: '#/parameters/pageSize'
+      responses:
+        200:
+          description: Successful response
+          schema:
+            type: object
+            properties:
+              items:
+                type: array
+                minItems: 0
+                maxItems: 100
+                uniqueItems: true
+                items:
+                  $ref: '#/definitions/Game'
+              total:
+                type: integer
+              count:
+                type: integer
+              _links:
+                $ref: '#/definitions/PaginationLinks'
+    post:
+      description: |
+        Creates a new `Gae` for the specified date
+      parameters:
+        - name: round
+          in: body
+          description: Model of the game to be created round
+          required: true
+          schema:
+            $ref: '#/definitions/NewGame'
+      responses:
+        201:
+          $ref: '#/responses/201'
+        400:
+          $ref: '#/responses/400'
+        401:
+          $ref: '#/responses/401'
+
 
   /tokens:
     post:
@@ -384,6 +429,47 @@ definitions:
             $ref: '#/definitions/Player'
           player_b:
             $ref: '#/definitions/Player'
+
+  NewGame:
+    type: object
+    description: A `Game` describes the results of two competing `Team` entites. It belongs to a specific round
+    properties:
+      id_round:
+        type: number
+        format: integer
+        description: Unique identifier of the round that game belongs to
+      id_team_a:
+        type: number
+        format: integer
+        description: Unique identifier of the first of the two competing teams
+      id_team_b:
+        type: number
+        format: integer
+        description: Unique identifier of the second of the two competing teams
+      team_a_score:
+        type: number
+        format: integer
+        minimum: 0
+        maximum: 30
+        description: Final score of the first team
+      team_b_score:
+        type: number
+        format: integer
+        minimum: 0
+        maximum: 30
+        description: Final score of the second team
+      _links:
+        $ref: '#/definitions/HAL'
+      _embedded:
+        type: object
+        properties:
+          round:
+            $ref: '#/definitions/Round'
+          player_a:
+            $ref: '#/definitions/Player'
+          player_b:
+            $ref: '#/definitions/Player'
+
 
   Game:
     type: object
