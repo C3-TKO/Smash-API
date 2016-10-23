@@ -34,13 +34,10 @@ class RoundController extends BaseController
         $em->persist($round);
         $em->flush();
 
-        /*
         $roundUrl = $this->generateUrl(
             'get_round',
             ['id' => $round->getId()]
         );
-        */
-        $roundUrl = '/api/rounds/' . $round->getId();
 
         // Response handling
         $response = $this->createApiResponse($round, Response::HTTP_CREATED);
@@ -66,5 +63,25 @@ class RoundController extends BaseController
 
         $response = $this->createApiResponse($paginatedCollection);
         return $response;
+    }
+
+    /**
+     * @Route("/api/rounds/{id}", name="get_round")
+     * @Method("GET")
+     */
+    public function getAction($id)
+    {
+        $round = $this->getDoctrine()
+            ->getRepository('AppBundle:Round')
+            ->findOneById($id);
+
+        if (!$round) {
+            throw $this->createNotFoundException(sprintf(
+                'No round found with id %s',
+                $id
+            ));
+        }
+
+        return $this->createApiResponse($round);
     }
 }

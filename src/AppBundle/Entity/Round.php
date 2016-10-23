@@ -4,12 +4,20 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Round
  *
  * @ORM\Table(name="rounds", uniqueConstraints={@ORM\UniqueConstraint(name="date", columns={"date"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\RoundRepository")
+ * @Hateoas\Relation(
+ *     "self",
+ *     href=@Hateoas\Route(
+ *          "get_round",
+ *          parameters={"id"= "expr(object.getId())"}
+ *     )
+ * )
  */
 class Round
 {

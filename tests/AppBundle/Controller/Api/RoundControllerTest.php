@@ -173,7 +173,7 @@ class RoundControllerTest extends ApiTestCase
         ));
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'date', '1980-04-30');
-        $this->asserter()->assertResponsePropertyEquals($response, '_links.self.href', $this->adjustUri('/api/players/1'));
+        $this->asserter()->assertResponsePropertyEquals($response, '_links.self.href', $this->adjustUri('/api/rounds/1'));
     }
 
     /**
