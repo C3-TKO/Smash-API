@@ -18,7 +18,7 @@ class GameType extends AbstractType
             ->add('id_team_a', EntityType::class, ['class' => 'AppBundle:Team', 'property_path' => 'team_a'])
             ->add('id_team_b', EntityType::class, ['class' => 'AppBundle:Team', 'property_path' => 'team_b'])
             ->add('team_a_score', IntegerType::class)
-            ->add('team_a_score', IntegerType::class);
+            ->add('team_b_score', IntegerType::class);
     }
 
     public function configureOptions(OptionsResolver $resolver)
