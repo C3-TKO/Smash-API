@@ -156,4 +156,34 @@ class RoundControllerTest extends ApiTestCase
         $response = $this->client->get($firstLink);
         $this->assertEquals(200, $response->getStatusCode());
     }
+
+    /**
+     * @test
+     */
+    public function getARoundByValidIdShouldReturnARound() {
+        $this->createRounds(['1980-04-30']);
+
+        $response = $this->client->get('/api/rounds/1');
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'id',
+            'date'
+        ));
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'date', '1980-04-30');
+        $this->asserter()->assertResponsePropertyEquals($response, '_links.self.href', $this->adjustUri('/api/players/1'));
+    }
+
+    /**
+     * @test
+     */
+    public function test404Error()
+    {
+        $response = $this->client->get('/api/rounds/404');
+        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
+        $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
+        $this->assertAccessToNotExistingEntity($response, 'round', 404);
+    }
 }
