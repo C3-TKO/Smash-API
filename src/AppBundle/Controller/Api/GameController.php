@@ -34,13 +34,11 @@ class GameController extends BaseController
         $em->persist($game);
         $em->flush();
 
-        /*
+
         $gameUrl = $this->generateUrl(
             'get_round',
             ['id' => $game->getId()]
         );
-        */
-        $gameUrl = '/api/games/1';
 
         // Response handling
         $response = $this->createApiResponse($game, Response::HTTP_CREATED);
@@ -66,5 +64,25 @@ class GameController extends BaseController
 
         $response = $this->createApiResponse($paginatedCollection);
         return $response;
+    }
+
+    /**
+     * @Route("/api/games/{id}", name="get_game")
+     * @Method("GET")
+     */
+    public function getAction($id)
+    {
+        $game = $this->getDoctrine()
+            ->getRepository('AppBundle:Game')
+            ->findOneById($id);
+
+        if (!$game) {
+            throw $this->createNotFoundException(sprintf(
+                'No player found with id %s',
+                $id
+            ));
+        }
+
+        return $this->createApiResponse($game);
     }
 }

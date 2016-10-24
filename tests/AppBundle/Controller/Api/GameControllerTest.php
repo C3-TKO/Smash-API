@@ -112,7 +112,6 @@ class GameControllerTest extends ApiTestCase
             'team_b_score'
         ));
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
-        $this->asserter()->assertResponsePropertyEquals($response, 'name', 'ACME');
         $this->asserter()->assertResponsePropertyEquals($response, 'id_team_a', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_team_b', 2);
         $this->asserter()->assertResponsePropertyEquals($response, 'team_a_score', 21);

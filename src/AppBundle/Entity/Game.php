@@ -7,12 +7,20 @@ use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 use AppBundle\Entity\Round;
 use AppBundle\Entity\Team;
+use Hateoas\Configuration\Annotation as Hateoas;
 
 /**
  * Game
  *
  * @ORM\Table(name="games", indexes={@ORM\Index(name="IDX_232B318C2B6BAB04", columns={"id_round"}), @ORM\Index(name="IDX_232B318C92977BE4", columns={"id_team_a"}), @ORM\Index(name="IDX_232B318CB9E2A5E", columns={"id_team_b"})})
  * @ORM\Entity(repositoryClass="AppBundle\Repository\GameRepository")
+ * @Hateoas\Relation(
+ *     "self",
+ *     href=@Hateoas\Route(
+ *          "get_game",
+ *          parameters={"id"= "expr(object.getId())"}
+ *     )
+ * )
  */
 class Game
 {
