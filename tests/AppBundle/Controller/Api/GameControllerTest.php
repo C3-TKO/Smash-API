@@ -4,6 +4,8 @@ namespace AppBundle\Tests\ControllerAPI;
 
 use Symfony\Component\HttpFoundation\Response;
 use AppBundle\Test\ApiTestCase;
+use AppBundle\Entity\Team;
+use AppBundle\Entity\Round;
 
 class GameControllerTest extends ApiTestCase
 {
@@ -20,9 +22,9 @@ class GameControllerTest extends ApiTestCase
     public function postAValidGameShouldCreateANewGameEntity()
     {
         list(
+            $round,
             $teamA,
-            $teamB,
-            $round
+            $teamB
         ) = $this->prepareAValidGameInDatabase();
 
         $data = [
@@ -69,14 +71,12 @@ class GameControllerTest extends ApiTestCase
     public function getGamesShouldRetrieveACollectionOfAllGames()
     {
         list(
+            $round,
             $teamA,
-            $teamB,
-            $round
+            $teamB
         ) = $this->prepareAValidGameInDatabase();
 
-        $this->createGame($round, $teamA, $teamB, 21, 0);
-        $this->createGame($round, $teamA, $teamB, 21, 1);
-        $this->createGame($round, $teamA, $teamB, 21, 2);
+        $this->createGames($round, $teamA, $teamB, [[21, 0], [21, 1], [21, 2]]);
 
         $response = $this->client->get('/api/games');
 
@@ -92,12 +92,12 @@ class GameControllerTest extends ApiTestCase
     public function getGameShouldRetrieveASingleGame()
     {
         list(
+            $round,
             $teamA,
-            $teamB,
-            $round
+            $teamB
         ) = $this->prepareAValidGameInDatabase();
 
-        $this->createGame($round, $teamA, $teamB, 21, 0);
+        $this->createGames($round, $teamA, $teamB, [[21, 0]]);
 
         $response = $this->client->get('/api/games/1');
 
@@ -131,20 +131,28 @@ class GameControllerTest extends ApiTestCase
         $playerC = $em->getRepository('AppBundle:Player')->findOneById(3);
         $playerD = $em->getRepository('AppBundle:Player')->findOneById(4);
 
-        $this->createTeam($playerA, $playerB);
-        $this->createTeam($playerC, $playerD);
+        $teamA = new Team();
+        $teamA->setPlayerA($playerA);
+        $teamA->setPlayerB($playerB);
 
-        $teamA = $em->getRepository('AppBundle:Team')->findOneById(1);
-        $teamB = $em->getRepository('AppBundle:Team')->findOneById(2);
+        $teamB = new Team();
+        $teamB->setPlayerA($playerC);
+        $teamB->setPlayerB($playerD);
 
-        $this->createRounds(['1980-04-30']);
+        $round = new Round();
+        $round->setDate(\DateTime::createFromFormat('Y-m-d', '1980-04-30'));
 
-        $round = $em->getRepository('AppBundle:Round')->findOneById(1);
+        $this->getEntityManager()->persist($teamA);
+        $this->getEntityManager()->persist($teamB);
+        $this->getEntityManager()->persist($round);
+        $this->getEntityManager()->flush($teamA);
+        $this->getEntityManager()->flush($teamB);
+        $this->getEntityManager()->flush($round);
 
         return [
+            $round,
             $teamA,
-            $teamB,
-            $round
+            $teamB
         ];
     }
 }

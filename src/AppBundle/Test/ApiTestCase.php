@@ -364,17 +364,18 @@ class ApiTestCase extends KernelTestCase
      * @param int $team_a_score
      * @param int $team_b_score
      */
-    protected function createGame(Round $round, Team $teamA, Team $teamB, $team_a_score, $team_b_score)
+    protected function createGames(Round $round, Team $teamA, Team $teamB, array $scores)
     {
-        $game = new Game();
-        $game->setRound($round);
-        $game->setTeamA($teamA);
-        $game->setTeamB($teamB);
-        $game->setTeamAScore($team_a_score);
-        $game->setTeamBScore($team_b_score);
-
-        $this->getEntityManager()->persist($game);
-        $this->getEntityManager()->flush();
+        foreach ($scores as $score) {
+            $game = new Game();
+            $game->setRound($round);
+            $game->setTeamA($teamA);
+            $game->setTeamB($teamB);
+            $game->setTeamAScore($score[0]);
+            $game->setTeamBScore($score[1]);
+            $this->getEntityManager()->persist($game);
+            $this->getEntityManager()->flush($game);
+        }
     }
 
     /**

@@ -36,7 +36,7 @@ class GameController extends BaseController
 
 
         $gameUrl = $this->generateUrl(
-            'get_round',
+            'get_game',
             ['id' => $game->getId()]
         );
 
