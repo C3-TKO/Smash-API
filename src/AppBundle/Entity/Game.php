@@ -12,7 +12,7 @@ use AppBundle\Entity\Team;
  * Game
  *
  * @ORM\Table(name="games", indexes={@ORM\Index(name="IDX_232B318C2B6BAB04", columns={"id_round"}), @ORM\Index(name="IDX_232B318C92977BE4", columns={"id_team_a"}), @ORM\Index(name="IDX_232B318CB9E2A5E", columns={"id_team_b"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\GameRepository")
  */
 class Game
 {
