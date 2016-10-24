@@ -2,6 +2,7 @@
 
 namespace AppBundle\Test;
 
+use AppBundle\Entity\Game;
 use AppBundle\Entity\Player;
 use AppBundle\Entity\Team;
 use AppBundle\Entity\User;
@@ -353,6 +354,26 @@ class ApiTestCase extends KernelTestCase
         $team->setPlayerB($playerB);
 
         $this->getEntityManager()->persist($team);
+        $this->getEntityManager()->flush();
+    }
+
+    /**
+     * @param Round $round
+     * @param Team $teamA
+     * @param Team $teamB
+     * @param int $team_a_score
+     * @param int $team_b_score
+     */
+    protected function createGame(Round $round, Team $teamA, Team $teamB, $team_a_score, $team_b_score)
+    {
+        $game = new Game();
+        $game->setRound($round);
+        $game->setTeamA($teamA);
+        $game->setTeamB($teamB);
+        $game->setTeamAScore($team_a_score);
+        $game->setTeamBScore($team_b_score);
+
+        $this->getEntityManager()->persist($game);
         $this->getEntityManager()->flush();
     }
 

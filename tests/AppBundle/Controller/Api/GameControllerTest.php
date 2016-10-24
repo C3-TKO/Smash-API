@@ -20,14 +20,10 @@ class GameControllerTest extends ApiTestCase
     public function postAValidGameShouldCreateANewGameEntity()
     {
         list(
-            $playerA,
-            $playerB,
-            $playerC,
-            $playerD,
             $teamA,
             $teamB,
             $round
-            ) = $this->prepareAValidGameInDatabase();
+        ) = $this->prepareAValidGameInDatabase();
 
         $data = [
             'id_round' => $round->getId(),
@@ -67,6 +63,32 @@ class GameControllerTest extends ApiTestCase
         $this->assertEquals(1, count($players));
     }
 
+    /**
+     * @test
+     */
+    public function getGamesShouldRetrieveACollectionOfAllGames()
+    {
+        list(
+            $teamA,
+            $teamB,
+            $round
+        ) = $this->prepareAValidGameInDatabase();
+
+        $this->createGame($round, $teamA, $teamB, 21, 0);
+        $this->createGame($round, $teamA, $teamB, 21, 1);
+        $this->createGame($round, $teamA, $teamB, 21, 2);
+
+        $response = $this->client->get('/api/games');
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
+        $this->asserter()->assertResponsePropertyIsArray($response, 'items');
+        $this->asserter()->assertResponsePropertyCount($response, 'items', 3);
+    }
+
+    /**
+     * @return array
+     */
     private function prepareAValidGameInDatabase() {
         $this->createPlayers(['Player_A', 'Player_B', 'Player_C', 'Player_D']);
 
@@ -87,10 +109,6 @@ class GameControllerTest extends ApiTestCase
         $round = $em->getRepository('AppBundle:Round')->findOneById(1);
 
         return [
-            $playerA,
-            $playerB,
-            $playerC,
-            $playerD,
             $teamA,
             $teamB,
             $round
