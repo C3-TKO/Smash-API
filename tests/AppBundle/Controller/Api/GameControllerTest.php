@@ -87,6 +87,40 @@ class GameControllerTest extends ApiTestCase
     }
 
     /**
+     * @test
+     */
+    public function getGameShouldRetrieveASingleGame()
+    {
+        list(
+            $teamA,
+            $teamB,
+            $round
+        ) = $this->prepareAValidGameInDatabase();
+
+        $this->createGame($round, $teamA, $teamB, 21, 0);
+
+        $response = $this->client->get('/api/games/1');
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'id',
+            'id_round',
+            'id_team_a',
+            'id_team_b',
+            'team_a_score',
+            'team_b_score'
+        ));
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'name', 'ACME');
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_team_a', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_team_b', 2);
+        $this->asserter()->assertResponsePropertyEquals($response, 'team_a_score', 21);
+        $this->asserter()->assertResponsePropertyEquals($response, 'team_b_score', 0);
+        $this->asserter()->assertResponsePropertyEquals($response, '_links.self.href', $this->adjustUri('/api/games/1'));
+    }
+
+    /**
      * @return array
      */
     private function prepareAValidGameInDatabase() {
