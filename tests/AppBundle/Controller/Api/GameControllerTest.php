@@ -61,8 +61,8 @@ class GameControllerTest extends ApiTestCase
 
         // Only one player should be in database
         $em = $this->getEntityManager();
-        $players = $em->getRepository('AppBundle:Game')->findAll();
-        $this->assertEquals(1, count($players));
+        $games = $em->getRepository('AppBundle:Game')->findAll();
+        $this->assertEquals(1, count($games));
     }
 
     /**
