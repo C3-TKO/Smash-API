@@ -361,8 +361,7 @@ class ApiTestCase extends KernelTestCase
      * @param Round $round
      * @param Team $teamA
      * @param Team $teamB
-     * @param int $team_a_score
-     * @param int $team_b_score
+     * @param int[] $scores
      */
     protected function createGames(Round $round, Team $teamA, Team $teamB, array $scores)
     {
