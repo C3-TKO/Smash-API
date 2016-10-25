@@ -85,4 +85,36 @@ class GameController extends BaseController
 
         return $this->createApiResponse($game);
     }
+
+    /**
+     * @Security("is_granted('ROLE_USER')")
+     * @Route("/api/games/{id}", name="put_game")
+     * @Method("PUT")
+     */
+    public function updateAction($id, Request $request)
+    {
+        $game = $this->getDoctrine()
+            ->getRepository('AppBundle:Game')
+            ->findOneById($id);
+
+        if (!$game) {
+            throw $this->createNotFoundException(sprintf(
+                'No game found with id %s',
+                $id
+            ));
+        }
+
+        $form = $this->createForm('AppBundle\Form\UpdateGameType', $game);
+        $this->processForm($request, $form);
+
+        if (!$form->isValid()) {
+            return $this->throwApiProblemValidationException($form);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($game);
+        $em->flush();
+
+        return $this->createApiResponse($game);
+    }
 }

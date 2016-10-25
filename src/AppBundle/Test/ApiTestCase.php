@@ -332,14 +332,17 @@ class ApiTestCase extends KernelTestCase
     /**
      * @param array $dateStrings
      */
-    protected function createRounds(array $dateStrings)
+    protected function createRounds(array $dateStrings, $flush = true)
     {
         foreach($dateStrings as $dateString) {
             $round = new Round();
             $round->setDate(\DateTime::createFromFormat('Y-m-d', $dateString));
 
             $this->getEntityManager()->persist($round);
-            $this->getEntityManager()->flush();
+
+            if ($flush) {
+                $this->getEntityManager()->flush($round);
+            }
         }
     }
 

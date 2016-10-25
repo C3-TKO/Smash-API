@@ -112,11 +112,67 @@ class GameControllerTest extends ApiTestCase
             'team_b_score'
         ));
         $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_round', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_team_a', 1);
         $this->asserter()->assertResponsePropertyEquals($response, 'id_team_b', 2);
         $this->asserter()->assertResponsePropertyEquals($response, 'team_a_score', 21);
         $this->asserter()->assertResponsePropertyEquals($response, 'team_b_score', 0);
         $this->asserter()->assertResponsePropertyEquals($response, '_links.self.href', $this->adjustUri('/api/games/1'));
+    }
+
+    /**
+     * @test
+     */
+    public function putGameShouldUpdateGame()
+    {
+        $this->createRounds(['1979-01-06'], false);
+
+        // This creates games related to the round with the id value 2
+        list(
+            $round,
+            $teamA,
+            $teamB
+            ) = $this->prepareAValidGameInDatabase();
+
+        $this->createGames($round, $teamA, $teamB, [[21, 0]]);
+
+        $data = array(
+            'id_round' => 1,
+            // Switching the order of the team ids
+            'id_team_a' => $teamB->getId(),
+            'id_team_b' => $teamA->getId(),
+            // Sweitching the score
+            'team_a_score' => 0,
+            'team_b_score' => 21,
+        );
+
+        $response = $this->client->put('/api/games/1', [
+            'body' => json_encode($data),
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
+
+        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
+        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
+        $this->asserter()->assertResponsePropertiesExist($response, array(
+            'id',
+            'id_round',
+            'id_team_a',
+            'id_team_b',
+            'team_a_score',
+            'team_b_score'
+        ));
+        $this->asserter()->assertResponsePropertyEquals($response, 'id', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_round', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_team_a', 2);
+        $this->asserter()->assertResponsePropertyEquals($response, 'id_team_b', 1);
+        $this->asserter()->assertResponsePropertyEquals($response, 'team_a_score', 0);
+        $this->asserter()->assertResponsePropertyEquals($response, 'team_b_score', 21);
+        $this->asserter()->assertResponsePropertyEquals($response, '_links.self.href', $this->adjustUri('/api/games/1'));
+
+        // Only one round should be in database after update
+        $em = $this->getEntityManager();
+        $games = $em->getRepository('AppBundle:Game')->findAll();
+        $this->assertEquals(1, count($games));
     }
 
     /**
@@ -154,59 +210,5 @@ class GameControllerTest extends ApiTestCase
             $teamA,
             $teamB
         ];
-    }
-
-    /**
-     * @test
-     */
-    public function putGameShouldUpdateGame()
-    {
-        list(
-            $round,
-            $teamA,
-            $teamB
-            ) = $this->prepareAValidGameInDatabase();
-
-        $this->createGames($round, $teamA, $teamB, [[21, 0]]);
-
-        // Creates the round with id 2
-        $this->createRounds(['1979-01-06']);
-
-        $data = array(
-            'id_round' => 2,
-            // Switching the order of the team ids
-            'id_team_a' => $teamB->getId(),
-            'id_team_b' => $teamA->getId(),
-            // Sweitching the score
-            'team_a_score' => 0,
-            'team_b_score' => 21,
-        );
-
-        $response = $this->client->put('/api/games/1', [
-            'body' => json_encode($data),
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
-        ]);
-
-        $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $this->assertEquals('application/hal+json', $response->getHeader('Content-Type')[0]);
-        $this->asserter()->assertResponsePropertiesExist($response, array(
-            'id',
-            'id_round',
-            'id_team_a',
-            'id_team_b',
-            'team_a_score',
-            'team_b_score'
-        ));
-        $this->asserter()->assertResponsePropertyEquals($response, 'id', 2);
-        $this->asserter()->assertResponsePropertyEquals($response, 'id_team_a', 1);
-        $this->asserter()->assertResponsePropertyEquals($response, 'id_team_b', 2);
-        $this->asserter()->assertResponsePropertyEquals($response, 'team_a_score', 0);
-        $this->asserter()->assertResponsePropertyEquals($response, 'team_b_score', 21);
-        $this->asserter()->assertResponsePropertyEquals($response, '_links.self.href', $this->adjustUri('/api/games/1'));
-
-        // Only one round should be in database after update
-        $em = $this->getEntityManager();
-        $games = $em->getRepository('AppBundle:Games')->findAll();
-        $this->assertEquals(1, count($games));
     }
 }
