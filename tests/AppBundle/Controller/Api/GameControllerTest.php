@@ -176,6 +176,31 @@ class GameControllerTest extends ApiTestCase
     }
 
     /**
+     * @test
+     */
+    public function deleteGameShouldDeleteAGame()
+    {
+        list(
+            $round,
+            $teamA,
+            $teamB
+            ) = $this->prepareAValidGameInDatabase();
+
+        $this->createGames($round, $teamA, $teamB, [[21, 0]]);
+
+        $response = $this->client->delete('/api/games/1', [
+            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
+        ]);
+
+        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
+
+        // No more players should be in database
+        $em = $this->getEntityManager();
+        $games = $em->getRepository('AppBundle:Game')->findAll();
+        $this->assertEquals(0, count($games));
+    }
+
+    /**
      * @return array
      */
     private function prepareAValidGameInDatabase() {
