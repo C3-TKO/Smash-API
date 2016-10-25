@@ -233,7 +233,7 @@ EOF;
     /**
      * @test
      */
-    public function testRsourceNotFound()
+    public function testResourceNotFound()
     {
         // GET
         $response = $this->client->get('/api/rounds/404');
