@@ -78,7 +78,7 @@ class GameController extends BaseController
 
         if (!$game) {
             throw $this->createNotFoundException(sprintf(
-                'No player found with id %s',
+                'No game found with id %s',
                 $id
             ));
         }
@@ -116,5 +116,27 @@ class GameController extends BaseController
         $em->flush();
 
         return $this->createApiResponse($game);
+    }
+
+    /**
+     * @Security("is_granted('ROLE_USER')")
+     * @Route("/api/games/{id}", name="delete_game")
+     * @Method("DELETE")
+     */
+    public function deleteAction($id)
+    {
+        $game = $this->getDoctrine()
+            ->getRepository('AppBundle:Game')
+            ->findOneById($id);
+
+        if ($game) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($game);
+            $em->flush();
+        }
+
+        // Will always return a HTTP 204 as it doesn't matter if the player existed or not. What matters is idempotancy!
+        // Requesting an idempotant endpoint prescribes that the repsonse must always be the same
+        return new Response(null, Response::HTTP_NO_CONTENT);
     }
 }
