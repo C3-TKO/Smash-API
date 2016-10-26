@@ -64,23 +64,6 @@ class TeamControllerTest extends ApiTestCase
     /**
      * @test
      */
-    public function getNotExistingTeamShouldThrow404()
-    {
-        $data = ['name' => 'TestTeamNameUpdated'];
-
-        $response = $this->client->get('/api/teams/1', [
-            'body' => json_encode($data),
-            'headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)
-        ]);
-
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-        $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
-        $this->assertAccessToNotExistingEntity($response, 'team', 1);
-    }
-
-    /**
-     * @test
-     */
     public function putNameShouldUpdateTeamName()
     {
         $this->createPlayers(['ACME', 'INC.']);

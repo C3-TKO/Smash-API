@@ -201,28 +201,6 @@ class GameControllerTest extends ApiTestCase
     }
 
     /**
-     * @test
-     */
-    public function testResourceNotFound()
-    {
-        // GET
-        $response = $this->client->get('/api/games/404');
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-        $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
-        $this->assertAccessToNotExistingEntity($response, 'game', 404);
-
-        // PUT
-        $response = $this->client->put('/api/games/404', ['headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
-        $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());
-        $this->assertEquals('application/problem+json', $response->getHeader('Content-Type')[0]);
-        $this->assertAccessToNotExistingEntity($response, 'game', 404);
-
-        // DELETE
-        $response = $this->client->delete('/api/games/404', ['headers' => $this->getAuthorizedHeaders(self::USERNAME_TEST_USER)]);
-        $this->assertEquals(Response::HTTP_NO_CONTENT, $response->getStatusCode());
-    }
-
-    /**
      * @return array
      */
     private function prepareAValidGameInDatabase() {
