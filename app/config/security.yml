@@ -5,10 +5,16 @@ security:
     encoders:
         AppBundle\Entity\User: bcrypt
 
-    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
     providers:
-        database_users:
-            entity: { class: AppBundle:User }
+        in_memory:
+            memory:
+                users:
+                    smash-editor:
+                        password: editorpass
+                        roles: 'ROLE_EDITOR'
+                    smash-admin:
+                        password: adminpass
+                        roles: 'ROLE_ADMIN'
 
     firewalls:
         # disables authentication for assets and the profiler, adapt it according to your needs
