@@ -11,6 +11,8 @@ use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 
 class TokenController extends BaseController
 {
+    const TOKEN_TTL = 3600; // 3hours
+
     /**
      * @Route("/api/tokens", name="post_token")
      * @Method("POST")
@@ -33,7 +35,8 @@ class TokenController extends BaseController
 
         $token = $this->get('lexik_jwt_authentication.encoder')
             ->encode([
-                'username' => $user->getUsername()
+                'username' => $user->getUsername(),
+                'exp' => time() + self::TOKEN_TTL // 1 hour expiration
             ]);
 
         return new JsonResponse(['token' => $token]);
