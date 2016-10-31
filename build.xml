@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Smash-API" default="list-commands" basedir="." description="a demo project">
+
+    <target name="list-commands">
+        <echo msg="generate-jwt-keys"/>
+    </target>
+    <target name="generate-jwt-keys">
+        <exec command="openssl genrsa -out var/jwt/private.pem -aes256 4096"/>
+        <exec command="openssl rsa -pubout -in var/jwt/private.pem -out var/jwt/public.pem"/>
+    </target>
+</project>

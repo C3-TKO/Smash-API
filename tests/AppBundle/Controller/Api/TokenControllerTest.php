@@ -21,6 +21,8 @@ class TokenControllerTest extends ApiTestCase
             $response,
             'token'
         );
+
+        $this->debugResponse($response);
     }
 
     public function testCreateInvalidToken() {
