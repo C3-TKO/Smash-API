@@ -40,6 +40,6 @@
                 <input propertyName="password">Choose a password for ${username}:</input>
             </then>
         </if>
-        <exec command="php bin/console security:encode-password --empty-salt --ansi --no-debug $(password) 'AppBundle\Entity\User'"/>
+        <exec passthru="true" command="php bin/console security:encode-password --empty-salt --ansi --no-debug ${password} 'AppBundle\Entity\User'"/>
     </target>
 </project>
