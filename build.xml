@@ -16,9 +16,30 @@
     </target>
 
     <target name="create-user">
-        <echo msg="Username"/>
-        <echo msg="ROLE"/>
-        <exec command="php bin/console security:encode-password --empty-salt --ansi --no-debug kurac 'AppBundle\Entity\User'"/>
-        <echo msg="PASSWORD"/>
+        <if>
+            <not>
+                <isset property="username" />
+            </not>
+            <then>
+                <input propertyName="username">Enter a username:</input>
+            </then>
+        </if>
+        <if>
+            <not>
+                <isset property="role" />
+            </not>
+            <then>
+                <input propertyName="role" defaultValue="ROLE_USER" validArgs="ROLE_USER,ROLE_REPORTER,ROLE_ADMIN">Choose a role for ${username}:</input>
+            </then>
+        </if>
+        <if>
+            <not>
+                <isset property="password" />
+            </not>
+            <then>
+                <input propertyName="password">Choose a password for ${username}:</input>
+            </then>
+        </if>
+        <exec command="php bin/console security:encode-password --empty-salt --ansi --no-debug $(password) 'AppBundle\Entity\User'"/>
     </target>
 </project>
