@@ -4,8 +4,21 @@
     <target name="list-commands">
         <echo msg="generate-jwt-keys"/>
     </target>
+
     <target name="generate-jwt-keys">
-        <exec command="openssl genrsa -out var/jwt/private.pem -aes256 4096"/>
-        <exec command="openssl rsa -pubout -in var/jwt/private.pem -out var/jwt/public.pem"/>
+        <property name="pathToPublicKey" value="var/jwt/public.pem"/>
+        <property name="pathToPrivateKey" value="var/jwt/private.pem"/>
+        <exec command="openssl genrsa -out ${pathToPrivateKey} -aes256 4096"/>
+        <exec command="openssl rsa -pubout -in ${pathToPrivateKey} -out ${pathToPublicKey}"/>
+        <echo msg="Create public key in ${pathToPublicKey}"/>
+        <echo msg="Create private key in ${pathToPrivateKey}"/>
+        <!-- Add another password prompt-->
+    </target>
+
+    <target name="create-user">
+        <echo msg="Username"/>
+        <echo msg="ROLE"/>
+        <exec command="php bin/console security:encode-password --empty-salt --ansi --no-debug kurac 'AppBundle\Entity\User'"/>
+        <echo msg="PASSWORD"/>
     </target>
 </project>
